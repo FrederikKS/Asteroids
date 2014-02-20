@@ -5,6 +5,8 @@ using System.Text;
 
 namespace Asteroids
 {
+    enum Direction { Left, Right, Up, Down, None }
+
     class Player
     {
     }

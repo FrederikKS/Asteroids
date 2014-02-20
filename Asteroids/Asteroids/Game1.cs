@@ -18,6 +18,9 @@ namespace Asteroids
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Player player;
+        Enemy enemy;
+        Asteroid asteroid;
 
         public Game1()
             : base()
@@ -36,6 +39,11 @@ namespace Asteroids
         {
             // TODO: Add your initialization logic here
 
+            //player = new Player(new Vector2(10, 10));
+            //enemy = new Enemy(new Vector2(100, 100), player);
+            //GameManager.Instance.AllObjects.Add(player);
+            //GameManager.Instance.AllObjects.Add(enemy);
+
             base.Initialize();
         }
 
@@ -49,6 +57,10 @@ namespace Asteroids
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            foreach (GameObject obj in GameManager.Instance.AllObjects)
+            {
+                obj.LoadContent(Content);
+            }
         }
 
         /// <summary>
@@ -71,7 +83,10 @@ namespace Asteroids
                 Exit();
 
             // TODO: Add your update logic here
-
+            foreach (GameObject obj in GameManager.Instance.AllObjects)
+            {
+                obj.Update(gameTime);
+            }
             base.Update(gameTime);
         }
 
@@ -82,7 +97,12 @@ namespace Asteroids
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            spriteBatch.Begin();
+            foreach (GameObject obj in GameManager.Instance.AllObjects)
+            {
+                obj.Draw(spriteBatch);
+            }
+            spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
