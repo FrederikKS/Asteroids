@@ -12,7 +12,8 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Asteroids
 {
-    class Player
+    enum Direction { Left, Right, Up, Down, None }
+    class Player : GameObject
     {
         // Fields
 
