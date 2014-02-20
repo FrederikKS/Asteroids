@@ -18,6 +18,7 @@ namespace Asteroids
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D background;
         Player player;
         Enemy enemy;
         Asteroid asteroid;
@@ -39,9 +40,9 @@ namespace Asteroids
         {
             // TODO: Add your initialization logic here
 
-            //player = new Player(new Vector2(10, 10));
-            //enemy = new Enemy(new Vector2(100, 100), player);
-            //GameManager.Instance.AllObjects.Add(player);
+            player = new Player(new Vector2(100, 100));
+            //enemy = new Enemy(new Vector2(100, 100));
+            GameManager.Instance.AllObjects.Add(player);
             //GameManager.Instance.AllObjects.Add(enemy);
 
             base.Initialize();

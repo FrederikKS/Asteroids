@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Asteroids
 {
-    class Enemy
+    class Enemy : GameObject
     {
         // Fields
         
@@ -21,7 +21,7 @@ namespace Asteroids
 
         // Constructor
 
-        public Enemy(Vector2 startPos, Player player)
+        public Enemy(Vector2 startPos) : base(startPos)
         {
 
         }
@@ -31,22 +31,22 @@ namespace Asteroids
 
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
 
         }
 
-        public void OnAnimationDone(string name)
+        public override void OnAnimationDone(string name)
         {
 
         }
 
-        public void OnCollisionEnter(GameObject other)
+        public override void OnCollisionEnter(GameObject other)
         {
 
         }
 
-        public void OnCollisionExit(GameObject other)
+        public override void OnCollisionExit(GameObject other)
         {
 
         }

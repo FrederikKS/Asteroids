@@ -19,7 +19,7 @@ namespace Asteroids
         //Dictionary of animations
         protected Dictionary<string, Animation> animations = new Dictionary<string, Animation>();
         //Name of current animation
-        protected string aniName;
+        protected string currentAnimation;
         //Current frame of animation
         private int currentIndex;
         //Time passed since last frame change
@@ -54,6 +54,8 @@ namespace Asteroids
         private float sRotation;
         //List of objects currently colliding with this object
         private List<GameObject> collidingObjects;
+        //Bool for looping animation
+        protected bool loopAnimation;
 
         //Properties
         public Vector2 SPosition
@@ -91,7 +93,6 @@ namespace Asteroids
          public GameObject(Vector2 sPosition)
         {
             this.collidingObjects = new List<GameObject>();
-          
             this.sPosition = sPosition;
         }
         /// <summary>
@@ -110,15 +111,25 @@ namespace Asteroids
              //Adds time that has passed since last update
              timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-             //Calculates the curent index
+             
+             //Calculates the current index
              currentIndex = (int)(timeElapsed * fps);
 
              //Checks if we need to restart the animation
              if (currentIndex > sRectangles.Length - 1)
              {
-                 OnAnimationDone(aniName);
+                 OnAnimationDone(currentAnimation);
+                 
+                 if (!loopAnimation)
+                 {
+                     currentIndex = sRectangles.Length - 1;
+                 }
+                 else
+                     currentIndex = 0;
+
+
                  timeElapsed = 0;
-                 currentIndex = 0;
+                 
              }
 
              SOrigin = new Vector2(sRectangles[currentIndex].Width / 2, sRectangles[currentIndex].Height / 2);
@@ -167,9 +178,9 @@ namespace Asteroids
          /// <param name="name">animation name</param>
          protected void PlayAnimation(string name)
          {
-             if (aniName != name && myDir == Direction.None)
+             if (currentAnimation != name && myDir == Direction.None)
              {
-                 aniName = name;
+                 currentAnimation = name;
                  currentIndex = 0;
                  timeElapsed = 0;
                  this.fps = animations[name].Fps;
@@ -218,9 +229,9 @@ namespace Asteroids
                      // Color colorB = dataB[(x - rectangleB.Left) + (y - rectangleB.Top) * rectangleB.Width];
 
                      //Get the color of both pixels at this point 
-                     Color colorA = animations[aniName].colors[currentIndex]
+                     Color colorA = animations[currentAnimation].colors[currentIndex]
                      [(x - CollisionRect.Left) + (y - CollisionRect.Top) * CollisionRect.Width];
-                     Color colorB = other.animations[other.aniName].colors[other.currentIndex]
+                     Color colorB = other.animations[other.currentAnimation].colors[other.currentIndex]
                      [(x - other.CollisionRect.Left) + (y - other.CollisionRect.Top) * other.CollisionRect.Width];
 
                      // If both pixels are not completely transparent
