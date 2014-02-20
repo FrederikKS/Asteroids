@@ -19,14 +19,24 @@ namespace Asteroids
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D background;
+        Rectangle bgRec;
         Player player;
         Enemy enemy;
-        Asteroid asteroid;
+        Asteroid asteroid; 
+        private List<Asteroid> astWave = new List<Asteroid>();
+        private int asteroidCount = 6;
+        private int worldSizeX = 1200;
+        private int worldSizeY = 720;
+        Random rnd = new Random();
+
 
         public Game1()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferHeight = worldSizeY;
+            graphics.PreferredBackBufferWidth = worldSizeX;
+            graphics.ApplyChanges();
             Content.RootDirectory = "Content";
         }
 
@@ -40,10 +50,24 @@ namespace Asteroids
         {
             // TODO: Add your initialization logic here
 
+            // Centers the window to the center of the resolution
+
+            Window.SetPosition(new Point(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 6, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 6));
+
             player = new Player(new Vector2(100, 100));
             //enemy = new Enemy(new Vector2(100, 100));
             GameManager.Instance.AllObjects.Add(player);
             //GameManager.Instance.AllObjects.Add(enemy);
+
+            for (int i = 0; i < asteroidCount; i++)
+            {
+                astWave.Add(new Asteroid(new Vector2(0, 0), new Vector2(0, 0), 5));
+            }
+
+            foreach (Asteroid ast in astWave)
+            {
+                GameManager.Instance.AllObjects.Add(ast);
+            }
 
             base.Initialize();
         }
@@ -58,6 +82,12 @@ namespace Asteroids
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            
+            // Adds asteroids to a list
+
+            background = Content.Load<Texture2D>(@"BackgroundRed");
+            bgRec = new Rectangle(0, 0, background.Width, background.Height);
+     
             foreach (GameObject obj in GameManager.Instance.AllObjects)
             {
                 obj.LoadContent(Content);
@@ -99,6 +129,9 @@ namespace Asteroids
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
+
+            spriteBatch.Draw(background, bgRec, Color.White);
+
             foreach (GameObject obj in GameManager.Instance.AllObjects)
             {
                 obj.Draw(spriteBatch);

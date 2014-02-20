@@ -12,41 +12,45 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Asteroids
 {
-    class Asteroid
+    class Asteroid : GameObject
     {
         // Fields 
 
         public int size;
-
+        
         // Constructor
 
-        public Asteroid(Vector2 startPos, Vector2 endPos, int size)
+        public Asteroid(Vector2 startPos, Vector2 endPos, int size) : base(startPos)
         {
-
+            this.size = size;
         }
 
         // Methods
 
         public void LoadContent(ContentManager content)
         {
-
+            sTexture = content.Load<Texture2D>("a10000.png");
         }
 
         public void Update(GameTime gameTime)
         {
-
+           
         }
 
-        public void OnCollisionEnter(GameObject other)
+        public override void OnCollisionEnter(GameObject other)
         {
-
+            // enter collision
         }
 
-        public void OnCollisionExit(GameObject other)
+        public override void OnCollisionExit(GameObject other)
         {
-
+            // Exit collision
         }
 
+        public override void OnAnimationDone(string name)
+        {
+           
+        }
         public void Split()
         {
 
