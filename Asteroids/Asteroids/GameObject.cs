@@ -45,7 +45,7 @@ namespace Asteroids
         //Speed of gameobject
         protected float speed;
         //Current direction of object
-        protected Direction myDir = Direction.None;
+        protected State state = State.Idle;
         //Delegate ended Animation event
         public delegate void AnimationEnded(string name);
         //Texture used for drawing collisionBox
@@ -54,8 +54,6 @@ namespace Asteroids
         private float sRotation;
         //List of objects currently colliding with this object
         private List<GameObject> collidingObjects;
-        //Bool for looping animation
-        protected bool loopAnimation;
 
         //Properties
         public Vector2 SPosition
@@ -119,19 +117,10 @@ namespace Asteroids
              if (currentIndex > sRectangles.Length - 1)
              {
                  OnAnimationDone(currentAnimation);
-                 
-                 if (!loopAnimation)
-                 {
-                     currentIndex = sRectangles.Length - 1;
-                 }
-                 else
-                     currentIndex = 0;
-
-
+                 currentIndex = 0;
                  timeElapsed = 0;
-                 
              }
-
+             
              SOrigin = new Vector2(sRectangles[currentIndex].Width / 2, sRectangles[currentIndex].Height / 2);
 
              HandleCollision();
@@ -178,7 +167,7 @@ namespace Asteroids
          /// <param name="name">animation name</param>
          protected void PlayAnimation(string name)
          {
-             if (currentAnimation != name && myDir == Direction.None)
+             if (currentAnimation != name)
              {
                  currentAnimation = name;
                  currentIndex = 0;

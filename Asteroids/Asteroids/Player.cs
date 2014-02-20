@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Asteroids
 {
-    enum Direction { Left, Right, Up, Down, None }
+    enum State { Turning, Idle }
     class Player : GameObject
     {
         // Fields
@@ -35,10 +35,11 @@ namespace Asteroids
 
             CreateAnimation("Normal", 1, 0, 2, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
             CreateAnimation("TurnLeft", 2, 0, 0, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
+            CreateAnimation("TurnLeftFull", 1, 0, 1, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
             CreateAnimation("TurnRight", 2, 0, 3, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
+            CreateAnimation("TurnRightFull", 1, 0, 4, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
             PlayAnimation("Normal");
 
-            loopAnimation = true;
             base.LoadContent(content);
 
         }
@@ -65,19 +66,32 @@ namespace Asteroids
 
         private void HandleInput(KeyboardState keyState)
         {
-            loopAnimation = true;
+            if (SRotation > 6.28325f || SRotation < -6.28325f)
+                SRotation = 0;
+
+            if (keyState.IsKeyDown(Keys.W))
+            {
+                sVelocity = new Vector2((float)Math.Cos(SRotation - 1.57079f), (float)Math.Sin(SRotation - 1.57079f));
+            }
+
             if (keyState.IsKeyDown(Keys.A))
             {
+                if (!currentAnimation.Contains("TurnLeftFull"))
                 PlayAnimation("TurnLeft");
-                loopAnimation = false;
+                state = State.Turning;
+                SRotation = SRotation - (float)(3 * Math.PI / 180);
             }
-            else if (keyState.IsKeyDown(Keys.D))
+            if (keyState.IsKeyDown(Keys.D))
             {
+                if(!currentAnimation.Contains("TurnRightFull"))
                 PlayAnimation("TurnRight");
-                loopAnimation = false;
+                state = State.Turning;
+                SRotation = SRotation + (float)(3 * Math.PI / 180);
             }
-            else
+            if (state == State.Idle)
+            {
                 PlayAnimation("Normal");
+            }
             
             if (keyState.IsKeyDown(Keys.Space))
             {
@@ -86,12 +100,19 @@ namespace Asteroids
 
             if (attacking)
             {
-                
+                //Shoot projectile
+                attacking = false;
             }
+
+            state = State.Idle;
         }
 
         public override void OnAnimationDone(string name)
         {
+            if(name.Contains("TurnLeft"))
+                PlayAnimation("TurnLeftFull");
+            if (name.Contains("TurnRight"))
+                PlayAnimation("TurnRightFull");
         }
 
         public override void OnCollisionEnter(GameObject other)
