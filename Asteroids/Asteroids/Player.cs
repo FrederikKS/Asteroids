@@ -15,6 +15,9 @@ namespace Asteroids
         // Fields
 
         private bool attacking = false;
+        private Projectile bullet;
+        private int bulletSpeed = 1;
+        private int bulletSize = 1;
 
         // Consctrutor
 
@@ -101,6 +104,8 @@ namespace Asteroids
             if (attacking)
             {
                 //Shoot projectile
+                bullet = new Projectile(SPosition, SRotation, bulletSpeed, bulletSize);
+                GameManager.Instance.AllObjects.Add(bullet);
                 attacking = false;
             }
 

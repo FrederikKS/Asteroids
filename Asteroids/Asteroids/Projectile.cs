@@ -11,38 +11,29 @@ namespace Asteroids
     class Projectile : GameObject
     {
         // Fields
-
-        private int speed;
         private int size;
-        private Vector2 endPos;
 
         // Constructor
-
-        public Projectile(Vector2 startPos, Vector2 endPos, int speed, int size) : base(startPos)
+        public Projectile(Vector2 startPos, float rotation, int speed, int size) : base(startPos)
         {
             this.speed = speed;
             this.size = size;
-            this.endPos = endPos;
+            SRotation = rotation;
         }
 
         // Methods
-
-        public void LoadContent(ContentManager content)
+        public override void LoadContent(ContentManager content)
         {
             sTexture = content.Load<Texture2D>("BulletBlue.png");
             Color[] colorData = new Color[sTexture.Width * sTexture.Height];
             sTexture.GetData<Color>(colorData);
 
-            if (size == 1)
-            CreateAnimation("Bullet", 1, 0, 0, 20, 25, Vector2.Zero, 10, colorData, sTexture.Width);
-            if (size == 2)
-            CreateAnimation("Bullet", 1, 0, 16, 28, 38, Vector2.Zero, 10, colorData, sTexture.Width);
-            if (size == 3)
-            CreateAnimation("Bullet", 1, 0, 40, 36, 47, Vector2.Zero, 10, colorData, sTexture.Width);
-            if (size == 4)
-            CreateAnimation("Bullet", 1, 0, 72, 44, 47, Vector2.Zero, 10, colorData, sTexture.Width);
-            if (size == 5)
-            CreateAnimation("Bullet", 1, 0, 112, 52, 80, Vector2.Zero, 10, colorData, sTexture.Width);
+            CreateAnimation("Bullet1", 1, 0, 0, 20, 25, Vector2.Zero, 10, colorData, sTexture.Width);
+            CreateAnimation("Bullet2", 1, 0, 16, 28, 38, Vector2.Zero, 10, colorData, sTexture.Width);
+            CreateAnimation("Bullet3", 1, 0, 40, 36, 47, Vector2.Zero, 10, colorData, sTexture.Width);
+            CreateAnimation("Bullet4", 1, 0, 72, 44, 47, Vector2.Zero, 10, colorData, sTexture.Width);
+            CreateAnimation("Bullet5", 1, 0, 112, 52, 80, Vector2.Zero, 10, colorData, sTexture.Width);
+            PlayAnimation("Bullet1");
 
             base.LoadContent(content);
         }
@@ -50,12 +41,7 @@ namespace Asteroids
         public override void Update(GameTime gameTime)
         {
             //Move in vector
-
-            //Calculates the enemys direction and makes sure it continues outside the screen where it disappears
-            if (endPos - this.SPosition == this.SPosition)
-                endPos += endPos;
-
-            sVelocity = endPos - this.SPosition;
+            sVelocity = new Vector2((float)Math.Cos(SRotation - 1.57079f), (float)Math.Sin(SRotation - 1.57079f));
 
             ////Makes sure we will get a unitvector, so that we get a normal movement
             sVelocity.Normalize();
