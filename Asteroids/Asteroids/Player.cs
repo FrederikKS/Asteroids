@@ -16,15 +16,28 @@ namespace Asteroids
 
         private bool attacking = false;
         private Projectile bullet;
-        private int bulletSpeed = 1;
+        private float bulletSpeed = 200;
         private int bulletSize = 1;
+
+        //Properties
+        public int BulletSize
+        {
+            get { return bulletSize; }
+            set { bulletSize = value; }
+        }
+        public float BulletSpeed
+        {
+            get { return bulletSpeed; }
+            set { bulletSpeed = value; }
+        }
+
 
         // Consctrutor
 
         public Player(Vector2 sPosition)
             : base(sPosition)
         {
-            speed = 100;
+            Speed = 100;
             
         }
 
@@ -43,12 +56,25 @@ namespace Asteroids
             CreateAnimation("TurnRightFull", 1, 0, 4, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
             PlayAnimation("Normal");
 
+            bullet = new Projectile(this);
+            bullet.LoadContent(content);
+            
             base.LoadContent(content);
 
         }
 
         public override void Update(GameTime gameTime)
         {
+            //Keep bullet updated
+            if (bullet.Size != bulletSize || bullet.Speed != bulletSpeed)
+            {
+                bullet.Size = bulletSize;
+                bullet.Speed = bulletSpeed;
+                bullet.SRotation = SRotation;
+            }
+            else
+                bullet.SRotation = SRotation;
+
             //Resets velocity
             sVelocity = Vector2.Zero;
 
@@ -59,7 +85,7 @@ namespace Asteroids
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             //Applies our speed to our velocity
-            sVelocity *= speed;
+            sVelocity *= Speed;
 
             //Multiplies our movement framerate independent by multiplying with deltaTime
             SPosition += (sVelocity * deltaTime);
@@ -104,8 +130,7 @@ namespace Asteroids
             if (attacking)
             {
                 //Shoot projectile
-                bullet = new Projectile(SPosition, SRotation, bulletSpeed, bulletSize);
-                GameManager.Instance.AllObjects.Add(bullet);
+                GameManager.Instance.TempList.Add(bullet);
                 attacking = false;
             }
 

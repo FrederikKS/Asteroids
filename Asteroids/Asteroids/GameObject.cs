@@ -43,7 +43,7 @@ namespace Asteroids
         //Velocity of the object
         protected Vector2 sVelocity;
         //Speed of gameobject
-        protected float speed;
+        private float speed;
         //Current direction of object
         protected State state = State.Idle;
         //Delegate ended Animation event
@@ -65,6 +65,11 @@ namespace Asteroids
         {
             get { return sOrigin; }
             set { sOrigin = value; }
+        }
+        public float Speed
+        {
+            get { return speed; }
+            set { speed = value; }
         }
         public float SRotation
         {

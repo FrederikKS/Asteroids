@@ -22,6 +22,13 @@ namespace Asteroids
             set { instance = value; }
         }
         private List<GameObject> allObjects;
+        private List<GameObject> tempList;
+
+        internal List<GameObject> TempList
+        {
+            get { return tempList; }
+            set { tempList = value; }
+        }
 
         public List<GameObject> AllObjects
         {
@@ -32,6 +39,7 @@ namespace Asteroids
         private GameManager()
         {
             allObjects = new List<GameObject>();
+            tempList = new List<GameObject>();
         }
     }
 }

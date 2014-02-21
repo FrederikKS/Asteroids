@@ -13,12 +13,20 @@ namespace Asteroids
         // Fields
         private int size;
 
-        // Constructor
-        public Projectile(Vector2 startPos, float rotation, int speed, int size) : base(startPos)
+        // Property
+        public int Size
         {
-            this.speed = speed;
-            this.size = size;
-            SRotation = rotation;
+            get { return size; }
+            set { size = value; }
+        }
+
+        // Constructor
+        public Projectile(Player player) : base(player.SPosition)
+        {
+            Speed = player.BulletSpeed;
+            size = player.BulletSize;
+            SRotation = player.SRotation;
+            SPosition = player.SPosition;
         }
 
         // Methods
@@ -28,12 +36,18 @@ namespace Asteroids
             Color[] colorData = new Color[sTexture.Width * sTexture.Height];
             sTexture.GetData<Color>(colorData);
 
-            CreateAnimation("Bullet1", 1, 0, 0, 20, 25, Vector2.Zero, 10, colorData, sTexture.Width);
-            CreateAnimation("Bullet2", 1, 0, 16, 28, 38, Vector2.Zero, 10, colorData, sTexture.Width);
-            CreateAnimation("Bullet3", 1, 0, 40, 36, 47, Vector2.Zero, 10, colorData, sTexture.Width);
-            CreateAnimation("Bullet4", 1, 0, 72, 44, 47, Vector2.Zero, 10, colorData, sTexture.Width);
-            CreateAnimation("Bullet5", 1, 0, 112, 52, 80, Vector2.Zero, 10, colorData, sTexture.Width);
-            PlayAnimation("Bullet1");
+
+            CreateAnimation("Bullet", 1, 0, 0, 20, 25, Vector2.Zero, 10, colorData, sTexture.Width);
+            //if (size == 2)
+            //CreateAnimation("Bullet", 1, 0, 16, 28, 38, Vector2.Zero, 10, colorData, sTexture.Width);
+            //if (size == 3)
+            //CreateAnimation("Bullet", 1, 0, 40, 36, 47, Vector2.Zero, 10, colorData, sTexture.Width);
+            //if (size == 4)
+            //CreateAnimation("Bullet", 1, 0, 72, 44, 47, Vector2.Zero, 10, colorData, sTexture.Width);
+            //if (size == 5)
+            //CreateAnimation("Bullet", 1, 0, 112, 52, 80, Vector2.Zero, 10, colorData, sTexture.Width);
+
+            PlayAnimation("Bullet");
 
             base.LoadContent(content);
         }
@@ -47,7 +61,7 @@ namespace Asteroids
             sVelocity.Normalize();
 
             //Applies our speed to our velocity
-            sVelocity *= speed;
+            sVelocity *= Speed;
 
             //Seconds passed since last iteration of update
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
