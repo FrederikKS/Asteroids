@@ -22,20 +22,25 @@ namespace Asteroids
         Rectangle bgRec;
         Player player;
         Enemy enemy;
-        Asteroid asteroid; 
+        Asteroid asteroid;
+        private int worldSizeX;
+        private int worldSizeY;
+        private int astLocationX;
+        private int astLocationY;
         private List<Asteroid> astWave = new List<Asteroid>();
         private int asteroidCount = 6;
-        private int worldSizeX = 1200;
-        private int worldSizeY = 720;
         Random rnd = new Random();
-
-
+        private int astSpawn;
+        
+        
         public Game1()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferHeight = worldSizeY;
-            graphics.PreferredBackBufferWidth = worldSizeX;
+            graphics.PreferredBackBufferHeight = 720;
+            worldSizeY = graphics.PreferredBackBufferHeight;
+            graphics.PreferredBackBufferWidth = 1200;
+            worldSizeX = graphics.PreferredBackBufferWidth;
             graphics.ApplyChanges();
             Content.RootDirectory = "Content";
         }
@@ -61,9 +66,28 @@ namespace Asteroids
 
             for (int i = 0; i < asteroidCount; i++)
             {
-                astWave.Add(new Asteroid(new Vector2(0, 0), new Vector2(0, 0), 5));
+                astSpawn = rnd.Next(0, 4);
+                if (astSpawn == 0)
+                {
+                    astLocationX = 0;
+                    astWave.Add(new Asteroid(new Vector2(astLocationX, rnd.Next(0,1200)), new Vector2(0, 0), 5, 100));
+                }
+                if (astSpawn == 1)
+                {
+                    astLocationY = 0;
+                    astWave.Add(new Asteroid(new Vector2(rnd.Next(0, worldSizeX), astLocationY), new Vector2(0, 0), 5, 100));
+                }
+                if (astSpawn == 2)
+                {
+                    astLocationX = worldSizeX - 1;
+                    astWave.Add(new Asteroid(new Vector2(astLocationX, rnd.Next(0, worldSizeY)), new Vector2(0, 0), 5, 100));
+                }
+                if (astSpawn == 3)
+                {
+                    astLocationY = worldSizeY - 1;
+                    astWave.Add(new Asteroid(new Vector2(rnd.Next(0, worldSizeX), astLocationY), new Vector2(0, 0), 5, 100));
+                }
             }
-
             foreach (Asteroid ast in astWave)
             {
                 GameManager.Instance.AllObjects.Add(ast);
