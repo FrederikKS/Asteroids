@@ -70,22 +70,34 @@ namespace Asteroids
                 if (astSpawn == 0)
                 {
                     astLocationX = 0;
-                    astWave.Add(new Asteroid(new Vector2(astLocationX, rnd.Next(0,1200)), new Vector2(0, 0), 5, 100));
+                    int y = rnd.Next(0, 2);
+                    if (y == 1)
+                        y = worldSizeY;
+                    astWave.Add(new Asteroid(new Vector2(astLocationX, rnd.Next(0, worldSizeY)), 5, (float)NextDouble(rnd, 0, 6.28325)));
                 }
                 if (astSpawn == 1)
                 {
                     astLocationY = 0;
-                    astWave.Add(new Asteroid(new Vector2(rnd.Next(0, worldSizeX), astLocationY), new Vector2(0, 0), 5, 100));
+                    int x = rnd.Next(0, 2);
+                    if (x == 1)
+                        x = worldSizeX;
+                    astWave.Add(new Asteroid(new Vector2(rnd.Next(0, worldSizeX), astLocationY), 5, (float)NextDouble(rnd, 0, 6.28325)));
                 }
                 if (astSpawn == 2)
                 {
                     astLocationX = worldSizeX - 1;
-                    astWave.Add(new Asteroid(new Vector2(astLocationX, rnd.Next(0, worldSizeY)), new Vector2(0, 0), 5, 100));
+                    int y = rnd.Next(0, 2);
+                    if (y == 1)
+                        y = worldSizeY;
+                    astWave.Add(new Asteroid(new Vector2(astLocationX, rnd.Next(0, worldSizeY)), 5, (float)NextDouble(rnd, 0, 6.28325)));
                 }
                 if (astSpawn == 3)
                 {
                     astLocationY = worldSizeY - 1;
-                    astWave.Add(new Asteroid(new Vector2(rnd.Next(0, worldSizeX), astLocationY), new Vector2(0, 0), 5, 100));
+                    int x = rnd.Next(0, 2);
+                    if (x == 1)
+                        x = worldSizeX;
+                    astWave.Add(new Asteroid(new Vector2(rnd.Next(0, worldSizeX), astLocationY), 5, (float)NextDouble(rnd, 0, 6.28325)));
                 }
             }
             foreach (Asteroid ast in astWave)
@@ -164,6 +176,11 @@ namespace Asteroids
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        double NextDouble(Random rnd, double min, double max)
+        {
+            return min + (rnd.NextDouble() * (max - min));
         }
     }
 }
