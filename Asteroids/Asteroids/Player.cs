@@ -18,6 +18,8 @@ namespace Asteroids
         private Projectile bullet;
         private float bulletSpeed = 200;
         private int bulletSize = 1;
+        private BulletEngineer bulletEngineer;
+        private ContentManager bulletContent;
 
         //Properties
         public int BulletSize
@@ -30,7 +32,11 @@ namespace Asteroids
             get { return bulletSpeed; }
             set { bulletSpeed = value; }
         }
-
+        public ContentManager BulletContent
+        {
+            get { return bulletContent; }
+            set { bulletContent = value; }
+        }
 
         // Consctrutor
 
@@ -56,8 +62,11 @@ namespace Asteroids
             CreateAnimation("TurnRightFull", 1, 0, 4, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
             PlayAnimation("Normal");
 
-            bullet = new Projectile(this);
-            bullet.LoadContent(content);
+            bulletContent = content;
+
+
+            //bullet = new Projectile(this);
+            //bullet.LoadContent(content);
             
             base.LoadContent(content);
 
@@ -65,15 +74,15 @@ namespace Asteroids
 
         public override void Update(GameTime gameTime)
         {
-            //Keep bullet updated
-            if (bullet.Size != bulletSize || bullet.Speed != bulletSpeed)
-            {
-                bullet.Size = bulletSize;
-                bullet.Speed = bulletSpeed;
-                bullet.SRotation = SRotation;
-            }
-            else
-                bullet.SRotation = SRotation;
+            ////Keep bullet updated
+            //if (bullet.Size != bulletSize || bullet.Speed != bulletSpeed)
+            //{
+            //    bullet.Size = bulletSize;
+            //    bullet.Speed = bulletSpeed;
+            //    bullet.SRotation = SRotation;
+            //}
+            //else
+            //    bullet.SRotation = SRotation;
 
             //Resets velocity
             sVelocity = Vector2.Zero;
@@ -130,6 +139,9 @@ namespace Asteroids
             if (attacking)
             {
                 //Shoot projectile
+                bulletEngineer = new BulletEngineer(new Bullet(this));
+                bulletEngineer.BuildBullet();
+                bullet = bulletEngineer.GetBullet;
                 GameManager.Instance.TempList.Add(bullet);
                 attacking = false;
             }

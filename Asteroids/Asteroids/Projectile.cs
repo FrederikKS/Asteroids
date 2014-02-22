@@ -21,12 +21,12 @@ namespace Asteroids
         }
 
         // Constructor
-        public Projectile(Player player) : base(player.SPosition)
+        public Projectile(GameObject origin) : base(origin.SPosition)
         {
-            Speed = player.BulletSpeed;
-            size = player.BulletSize;
-            SRotation = player.SRotation;
-            SPosition = player.SPosition;
+            //Speed = player.BulletSpeed;
+            //size = player.BulletSize;
+            //SRotation = player.SRotation;
+            //SPosition = player.SPosition;
         }
 
         // Methods

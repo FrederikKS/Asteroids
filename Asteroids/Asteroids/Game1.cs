@@ -30,8 +30,7 @@ namespace Asteroids
         private List<Asteroid> astWave = new List<Asteroid>();
         private int asteroidCount = 6;
         Random rnd = new Random();
-        private int astSpawn;
-        
+        private int astSpawn;        
         
         public Game1()
             : base()
@@ -150,6 +149,16 @@ namespace Asteroids
                 Exit();
 
             // TODO: Add your update logic here
+            // Adding temp objects to object list
+            foreach (GameObject temp in GameManager.Instance.TempList)
+            {
+                if (!GameManager.Instance.AllObjects.Contains(temp))
+                    GameManager.Instance.AllObjects.Add(temp);
+            }
+
+            GameManager.Instance.TempList.Clear();
+
+            //Update all objects currently in the game
             foreach (GameObject obj in GameManager.Instance.AllObjects)
             {
                 obj.Update(gameTime);

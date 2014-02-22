@@ -26,7 +26,7 @@ namespace Asteroids
         {
             this.size = size;
             this.startPos = startPos;
-            speed = 150;
+            Speed = 150;
             this.SRotation = rotation;
         }
 
@@ -52,7 +52,7 @@ namespace Asteroids
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             //Applies our speed to our velocity
-            sVelocity *= speed;
+            sVelocity *= Speed;
 
             //Multiplies our movement framerate independent by multiplying with deltaTime
             SPosition += (sVelocity * deltaTime);
@@ -95,11 +95,5 @@ namespace Asteroids
         {
 
         }
-
-        double NextDouble(Random rnd, double min, double max)
-        {
-            return min + (rnd.NextDouble() * (max - min));
-        }
-
     }
 }

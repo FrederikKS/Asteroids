@@ -37,11 +37,14 @@
   <ItemGroup>
     <Compile Include="Animation.cs" />
     <Compile Include="Asteroid.cs" />
+    <Compile Include="Bullet.cs" />
+    <Compile Include="BulletEngineer.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameWindowExtension.cs" />
+    <Compile Include="IBulletBuilder.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Powerup.cs" />
     <Compile Include="Program.cs" />
