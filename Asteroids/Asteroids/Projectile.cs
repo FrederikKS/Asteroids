@@ -69,7 +69,6 @@ namespace Asteroids
             //Makes the movement framerate independent by multiplying with deltaTime
             SPosition += (sVelocity * deltaTime);
 
-
             base.Update(gameTime);
         }
 

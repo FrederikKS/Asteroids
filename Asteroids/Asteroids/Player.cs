@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace Asteroids
 {
@@ -20,6 +21,9 @@ namespace Asteroids
         private int bulletSize = 1;
         private BulletEngineer bulletEngineer;
         private ContentManager bulletContent;
+        private Stopwatch stopwatch;
+        private int turningSpeed = 4;
+        
 
         //Properties
         public int BulletSize
@@ -43,7 +47,7 @@ namespace Asteroids
         public Player(Vector2 sPosition)
             : base(sPosition)
         {
-            Speed = 100;
+            Speed = 200;
             
         }
 
@@ -63,10 +67,8 @@ namespace Asteroids
             PlayAnimation("Normal");
 
             bulletContent = content;
-
-
-            //bullet = new Projectile(this);
-            //bullet.LoadContent(content);
+            stopwatch = new Stopwatch();
+            stopwatch.Start();
             
             base.LoadContent(content);
 
@@ -74,16 +76,6 @@ namespace Asteroids
 
         public override void Update(GameTime gameTime)
         {
-            ////Keep bullet updated
-            //if (bullet.Size != bulletSize || bullet.Speed != bulletSpeed)
-            //{
-            //    bullet.Size = bulletSize;
-            //    bullet.Speed = bulletSpeed;
-            //    bullet.SRotation = SRotation;
-            //}
-            //else
-            //    bullet.SRotation = SRotation;
-
             //Resets velocity
             sVelocity = Vector2.Zero;
 
@@ -117,14 +109,14 @@ namespace Asteroids
                 if (!currentAnimation.Contains("TurnLeftFull"))
                 PlayAnimation("TurnLeft");
                 state = State.Turning;
-                SRotation = SRotation - (float)(3 * Math.PI / 180);
+                SRotation = SRotation - (float)(turningSpeed * Math.PI / 180);
             }
             if (keyState.IsKeyDown(Keys.D))
             {
                 if(!currentAnimation.Contains("TurnRightFull"))
                 PlayAnimation("TurnRight");
                 state = State.Turning;
-                SRotation = SRotation + (float)(3 * Math.PI / 180);
+                SRotation = SRotation + (float)(turningSpeed * Math.PI / 180);
             }
             if (state == State.Idle)
             {
@@ -133,7 +125,11 @@ namespace Asteroids
             
             if (keyState.IsKeyDown(Keys.Space))
             {
-                attacking = true;
+                if (stopwatch.ElapsedMilliseconds > 500)
+                {
+                    attacking = true;
+                    stopwatch.Restart();
+                }
             }
 
             if (attacking)
