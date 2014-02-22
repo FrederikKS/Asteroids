@@ -78,7 +78,7 @@
     <Content Include="Content\BackgroundRed.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\BulletBlue.png">
+    <Content Include="Content\Bullets.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\CollisionTexture.png">

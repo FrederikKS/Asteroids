@@ -32,20 +32,11 @@ namespace Asteroids
         // Methods
         public override void LoadContent(ContentManager content)
         {
-            sTexture = content.Load<Texture2D>("BulletBlue.png");
+            sTexture = content.Load<Texture2D>("Bullets.png");
             Color[] colorData = new Color[sTexture.Width * sTexture.Height];
             sTexture.GetData<Color>(colorData);
 
-
-            CreateAnimation("Bullet", 1, 0, 0, 20, 25, Vector2.Zero, 10, colorData, sTexture.Width);
-            //if (size == 2)
-            //CreateAnimation("Bullet", 1, 0, 16, 28, 38, Vector2.Zero, 10, colorData, sTexture.Width);
-            //if (size == 3)
-            //CreateAnimation("Bullet", 1, 0, 40, 36, 47, Vector2.Zero, 10, colorData, sTexture.Width);
-            //if (size == 4)
-            //CreateAnimation("Bullet", 1, 0, 72, 44, 47, Vector2.Zero, 10, colorData, sTexture.Width);
-            //if (size == 5)
-            //CreateAnimation("Bullet", 1, 0, 112, 52, 80, Vector2.Zero, 10, colorData, sTexture.Width);
+            CreateAnimation("Bullet", 1, 0, size-1, 48, 80, Vector2.Zero, 10, colorData, sTexture.Width);
 
             PlayAnimation("Bullet");
 
