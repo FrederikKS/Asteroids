@@ -26,7 +26,7 @@ namespace Asteroids
 
         }
 
-        public void LoadContent(ContentManager content)
+        public override void LoadContent(ContentManager content)
         {
 
         }

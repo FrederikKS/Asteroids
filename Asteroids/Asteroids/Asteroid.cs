@@ -15,31 +15,38 @@ namespace Asteroids
     class Asteroid : GameObject
     {
         // Fields 
-
-        public int size;
-        private Vector2 startPos;
+        private int size;
+        private int type;
         private Random rnd = new Random();
-      
+
+        //Properties
+        public int Size
+        {
+            get { return size; }
+            set { size = value; }
+        }
+        public int Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
+
         // Constructor
 
-        public Asteroid(Vector2 startPos, int size, float rotation) : base(startPos)
+        public Asteroid(Vector2 startPos, int type) : base(startPos)
         {
-            this.size = size;
-            this.startPos = startPos;
-            Speed = 150;
-            this.SRotation = rotation;
         }
 
         // Methods
 
         public override void LoadContent(ContentManager content)
         {
-            sTexture = content.Load<Texture2D>("a10000.png");
-            Color[] colorData = new Color[sTexture.Width * sTexture.Height];
-            sTexture.GetData<Color>(colorData);
+            //STexture = content.Load<Texture2D>("a10000.png");
+            //Color[] colorData = new Color[STexture.Width * STexture.Height];
+            //STexture.GetData<Color>(colorData);
 
-            CreateAnimation("Normal", 1, 0, 0, 120, 120, Vector2.Zero, 10, colorData, sTexture.Width);
-            PlayAnimation("Normal");
+            //CreateAnimation("Normal", 1, 0, 0, 120, 120, Vector2.Zero, 10, colorData, STexture.Width);
+            //PlayAnimation("Normal");
 
             base.LoadContent(content);
         }
@@ -93,7 +100,27 @@ namespace Asteroids
         }
         public void Split()
         {
-
+            if (size == 3)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    AsteroidEngineer engineer = new AsteroidEngineer(new AsteroidMedium(SPosition, type));
+                    engineer.BuildAsteroid();
+                    GameManager.Instance.TempList.Add(engineer.GetAsteroid);
+                } 
+            }
+            if (size == 2)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    AsteroidEngineer engineer = new AsteroidEngineer(new AsteroidSmall(SPosition, type));
+                    engineer.BuildAsteroid();
+                    GameManager.Instance.TempList.Add(engineer.GetAsteroid);
+                }
+            }
+            
+            
+            GameManager.Instance.RemoveWhenPossible.Add(this);
         }
     }
 }

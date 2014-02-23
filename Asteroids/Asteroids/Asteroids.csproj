@@ -37,6 +37,10 @@
   <ItemGroup>
     <Compile Include="Animation.cs" />
     <Compile Include="Asteroid.cs" />
+    <Compile Include="AsteroidEngineer.cs" />
+    <Compile Include="AsteroidLarge.cs" />
+    <Compile Include="AsteroidMedium.cs" />
+    <Compile Include="AsteroidSmall.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="BulletEngineer.cs" />
     <Compile Include="Enemy.cs" />
@@ -44,6 +48,7 @@
     <Compile Include="GameManager.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameWindowExtension.cs" />
+    <Compile Include="IAsteroidBuilder.cs" />
     <Compile Include="IBulletBuilder.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Powerup.cs" />
@@ -72,7 +77,58 @@
       <Link>SDL.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\a10000.png">
+    <Content Include="Content\Asteroids\Large1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Large2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Large3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Large4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Large5.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Large6.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Medium1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Medium2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Medium3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Medium4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Medium5.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Medium6.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Small1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Small2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Small3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Small4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Small5.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Asteroids\Small6.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\BackgroundRed.png">

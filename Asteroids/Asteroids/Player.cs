@@ -17,7 +17,7 @@ namespace Asteroids
 
         private bool attacking = false;
         private Projectile bullet;
-        private float bulletSpeed = 200;
+        private float bulletSpeed = 400;
         private int bulletSize = 1;
         private BulletEngineer bulletEngineer;
         private ContentManager bulletContent;
@@ -55,15 +55,15 @@ namespace Asteroids
 
         public override void LoadContent(ContentManager content)
         {
-            sTexture = content.Load<Texture2D>("spaceship.png");
-            Color[] colorData = new Color[sTexture.Width * sTexture.Height];
-            sTexture.GetData<Color>(colorData);
+            STexture = content.Load<Texture2D>("spaceship.png");
+            Color[] colorData = new Color[STexture.Width * STexture.Height];
+            STexture.GetData<Color>(colorData);
 
-            CreateAnimation("Normal", 1, 0, 2, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
-            CreateAnimation("TurnLeft", 2, 0, 0, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
-            CreateAnimation("TurnLeftFull", 1, 0, 1, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
-            CreateAnimation("TurnRight", 2, 0, 3, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
-            CreateAnimation("TurnRightFull", 1, 0, 4, 96, 120, Vector2.Zero, 10, colorData, sTexture.Width);
+            CreateAnimation("Normal", 1, 0, 2, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("TurnLeft", 2, 0, 0, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("TurnLeftFull", 1, 0, 1, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("TurnRight", 2, 0, 3, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("TurnRightFull", 1, 0, 4, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
             PlayAnimation("Normal");
 
             bulletContent = content;
@@ -90,6 +90,23 @@ namespace Asteroids
 
             //Multiplies our movement framerate independent by multiplying with deltaTime
             SPosition += (sVelocity * deltaTime);
+
+            if (SPosition.X >= 1200)
+            {
+                SPosition = new Vector2(1, SPosition.Y);
+            }
+            if (SPosition.Y >= 720)
+            {
+                SPosition = new Vector2(SPosition.X, 1);
+            }
+            if (SPosition.X <= 0)
+            {
+                SPosition = new Vector2(1199, SPosition.Y);
+            }
+            if (SPosition.Y <= 0)
+            {
+                SPosition = new Vector2(SPosition.X, 719);
+            }
 
             base.Update(gameTime);
         }

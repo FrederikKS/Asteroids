@@ -18,20 +18,19 @@ namespace Asteroids
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Rectangle gameBounds;
         Texture2D background;
         Rectangle bgRec;
         Player player;
-        Enemy enemy;
+        //Enemy enemy;
         Asteroid asteroid;
         private int worldSizeX;
         private int worldSizeY;
-        private int astLocationX;
-        private int astLocationY;
+        //private int astLocationX;
+        //private int astLocationY;
         private List<Asteroid> astWave = new List<Asteroid>();
-        private int asteroidCount = 1;
+        private int asteroidCount = 4;
         Random rnd = new Random();
-        private int astSpawn;        
+        //private int astSpawn;
         
         public Game1()
             : base()
@@ -63,52 +62,52 @@ namespace Asteroids
             //enemy = new Enemy(new Vector2(100, 100));
             GameManager.Instance.AllObjects.Add(player);
             //GameManager.Instance.AllObjects.Add(enemy);
+            GameManager.Instance.Content = Content;
 
             for (int i = 0; i < asteroidCount; i++)
             {
-                astSpawn = rnd.Next(0, 4);
-                if (astSpawn == 0)
-                {
-                    astLocationX = 0;
-                    int y = rnd.Next(0, 2);
-                    if (y == 1)
-                        y = worldSizeY;
-                    astWave.Add(new Asteroid(new Vector2(astLocationX, rnd.Next(0, worldSizeY)), 5, (float)NextDouble(rnd, 0, 6.28325)));
-                }
-                if (astSpawn == 1)
-                {
-                    astLocationY = 0;
-                    int x = rnd.Next(0, 2);
-                    if (x == 1)
-                        x = worldSizeX;
-                    astWave.Add(new Asteroid(new Vector2(rnd.Next(0, worldSizeX), astLocationY), 5, (float)NextDouble(rnd, 0, 6.28325)));
-                }
-                if (astSpawn == 2)
-                {
-                    astLocationX = worldSizeX - 1;
-                    int y = rnd.Next(0, 2);
-                    if (y == 1)
-                        y = worldSizeY;
-                    astWave.Add(new Asteroid(new Vector2(astLocationX, rnd.Next(0, worldSizeY)), 5, (float)NextDouble(rnd, 0, 6.28325)));
-                }
-                if (astSpawn == 3)
-                {
-                    astLocationY = worldSizeY - 1;
-                    int x = rnd.Next(0, 2);
-                    if (x == 1)
-                        x = worldSizeX;
-                    astWave.Add(new Asteroid(new Vector2(rnd.Next(0, worldSizeX), astLocationY), 5, (float)NextDouble(rnd, 0, 6.28325)));
-                }
+                AsteroidEngineer engineer = new AsteroidEngineer(new AsteroidLarge(new Vector2(rnd.Next(0, worldSizeX), rnd.Next(0, worldSizeY)), 0));
+                engineer.BuildAsteroid();
+                asteroid = engineer.GetAsteroid;
+                astWave.Add(asteroid);
+
+                //if (astSpawn == 0)
+                //{
+                //    astLocationX = 0;
+                //    int y = rnd.Next(0, 2);
+                //    if (y == 1)
+                //        y = worldSizeY;
+                //    astWave.Add(new Asteroid(new Vector2(astLocationX, rnd.Next(0, worldSizeY)), 5, (float)NextDouble(rnd, 0, 6.28325)));
+                //}
+                //if (astSpawn == 1)
+                //{
+                //    astLocationY = 0;
+                //    int x = rnd.Next(0, 2);
+                //    if (x == 1)
+                //        x = worldSizeX;
+                //    astWave.Add(new Asteroid(new Vector2(rnd.Next(0, worldSizeX), astLocationY), 5, (float)NextDouble(rnd, 0, 6.28325)));
+                //}
+                //if (astSpawn == 2)
+                //{
+                //    astLocationX = worldSizeX - 1;
+                //    int y = rnd.Next(0, 2);
+                //    if (y == 1)
+                //        y = worldSizeY;
+                //    astWave.Add(new Asteroid(new Vector2(astLocationX, rnd.Next(0, worldSizeY)), 5, (float)NextDouble(rnd, 0, 6.28325)));
+                //}
+                //if (astSpawn == 3)
+                //{
+                //    astLocationY = worldSizeY - 1;
+                //    int x = rnd.Next(0, 2);
+                //    if (x == 1)
+                //        x = worldSizeX;
+                //    astWave.Add(new Asteroid(new Vector2(rnd.Next(0, worldSizeX), astLocationY), 5, (float)NextDouble(rnd, 0, 6.28325)));
+                //}
             }
             foreach (Asteroid ast in astWave)
             {
                 GameManager.Instance.AllObjects.Add(ast);
             }
-
-            //Defining edge of game depending on resolution
-            Viewport viewport = graphics.GraphicsDevice.Viewport;
-
-            gameBounds = new Rectangle(0, 0, (int)(viewport.Width),(int)(viewport.Height));
 
             base.Initialize();
         }
@@ -141,7 +140,7 @@ namespace Asteroids
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
         /// <summary>
@@ -161,8 +160,18 @@ namespace Asteroids
                 if (!GameManager.Instance.AllObjects.Contains(temp))
                     GameManager.Instance.AllObjects.Add(temp);
             }
-
+            
+            //Clearing list of temp objects
             GameManager.Instance.TempList.Clear();
+
+            //Clearing list of objects ready to be removed
+            foreach (GameObject temp in GameManager.Instance.RemoveWhenPossible)
+            {
+                if (GameManager.Instance.AllObjects.Contains(temp))
+                    GameManager.Instance.AllObjects.Remove(temp);
+            }
+            GameManager.Instance.RemoveWhenPossible.Clear();
+
 
             //Update all objects currently in the game
             foreach (GameObject obj in GameManager.Instance.AllObjects)

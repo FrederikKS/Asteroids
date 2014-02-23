@@ -2,13 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework.Content;
 
 namespace Asteroids
 {
     class GameManager
     {
+        //Fields
         private static GameManager instance;
+        private ContentManager content;
+        private List<GameObject> allObjects;
+        private List<GameObject> tempList;
+        private List<GameObject> removeWhenPossible;
 
+        //Properties
+        public ContentManager Content
+        {
+            get { return content; }
+            set { content = value; }
+        }
         public static GameManager Instance
         {
             get
@@ -21,8 +33,11 @@ namespace Asteroids
             }
             set { instance = value; }
         }
-        private List<GameObject> allObjects;
-        private List<GameObject> tempList;
+        internal List<GameObject> RemoveWhenPossible
+        {
+            get { return removeWhenPossible; }
+            set { removeWhenPossible = value; }
+        }
 
         internal List<GameObject> TempList
         {
@@ -36,8 +51,10 @@ namespace Asteroids
             set { allObjects = value; }
         }
 
+        //Constructor
         private GameManager()
         {
+            removeWhenPossible = new List<GameObject>();
             allObjects = new List<GameObject>();
             tempList = new List<GameObject>();
         }

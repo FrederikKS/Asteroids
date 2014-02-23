@@ -13,7 +13,7 @@ namespace Asteroids
         //Fields
 
         //Texture
-        protected Texture2D sTexture;
+        private Texture2D sTexture;
         //Rectangle array for drawing sprite
         private Rectangle[] sRectangles;
         //Dictionary of animations
@@ -58,6 +58,11 @@ namespace Asteroids
         Matrix objectTransform;
 
         //Properties
+        public Texture2D STexture
+        {
+            get { return sTexture; }
+            set { sTexture = value; }
+        }
         public Vector2 SPosition
         {
             get { return sPosition; }
@@ -167,7 +172,7 @@ namespace Asteroids
          /// <param name="height">The height of each frame</param>
          /// <param name="offset">Animation offset(can be used to align animations)</param>
          /// <param name="fps">Animation fps</param>
-         protected void CreateAnimation(string name, int frames, int yPos, int xStartFrame, int width, int height, Vector2 offset, float fps, Color[] colors, int textureWidth)
+         public void CreateAnimation(string name, int frames, int yPos, int xStartFrame, int width, int height, Vector2 offset, float fps, Color[] colors, int textureWidth)
          {
              animations.Add(name, new Animation(frames, yPos, xStartFrame, width, height, offset, fps, colors, textureWidth));
          }
@@ -176,7 +181,7 @@ namespace Asteroids
          /// Plays an animation
          /// </summary>
          /// <param name="name">animation name</param>
-         protected void PlayAnimation(string name)
+         public void PlayAnimation(string name)
          {
              if (currentAnimation != name)
              {

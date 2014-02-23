@@ -23,20 +23,16 @@ namespace Asteroids
         // Constructor
         public Projectile(GameObject origin) : base(origin.SPosition)
         {
-            //Speed = player.BulletSpeed;
-            //size = player.BulletSize;
-            //SRotation = player.SRotation;
-            //SPosition = player.SPosition;
         }
 
         // Methods
         public override void LoadContent(ContentManager content)
         {
-            sTexture = content.Load<Texture2D>("Bullets.png");
-            Color[] colorData = new Color[sTexture.Width * sTexture.Height];
-            sTexture.GetData<Color>(colorData);
+            STexture = content.Load<Texture2D>("Bullets.png");
+            Color[] colorData = new Color[STexture.Width * STexture.Height];
+            STexture.GetData<Color>(colorData);
 
-            CreateAnimation("Bullet", 1, 0, size-1, 48, 80, Vector2.Zero, 10, colorData, sTexture.Width);
+            CreateAnimation("Bullet", 1, 0, size-1, 48, 80, Vector2.Zero, 10, colorData, STexture.Width);
 
             PlayAnimation("Bullet");
 
@@ -61,11 +57,19 @@ namespace Asteroids
             SPosition += (sVelocity * deltaTime);
 
             base.Update(gameTime);
+
+            if (SPosition.X < 0 || SPosition.X > 1280 || SPosition.Y < 0 || SPosition.Y > 720)
+                GameManager.Instance.RemoveWhenPossible.Add(this);
         }
 
         public override void OnCollisionEnter(GameObject other)
         {
             //Check if collides with object and which type the object is
+            if (other is Asteroid)
+            {
+                ((Asteroid)other).Split();
+                GameManager.Instance.RemoveWhenPossible.Add(this);
+            }
         }
 
         public override void OnCollisionExit(GameObject other)
