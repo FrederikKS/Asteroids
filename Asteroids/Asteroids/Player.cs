@@ -155,12 +155,13 @@ namespace Asteroids
 
         public override void OnCollisionEnter(GameObject other)
         {
+            this.sColor = Color.Red;
 
         }
 
         public override void OnCollisionExit(GameObject other)
         {
-
+            this.sColor = Color.White;
         }
 
 

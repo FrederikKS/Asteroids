@@ -18,6 +18,7 @@ namespace Asteroids
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Rectangle gameBounds;
         Texture2D background;
         Rectangle bgRec;
         Player player;
@@ -28,7 +29,7 @@ namespace Asteroids
         private int astLocationX;
         private int astLocationY;
         private List<Asteroid> astWave = new List<Asteroid>();
-        private int asteroidCount = 6;
+        private int asteroidCount = 1;
         Random rnd = new Random();
         private int astSpawn;        
         
@@ -103,6 +104,11 @@ namespace Asteroids
             {
                 GameManager.Instance.AllObjects.Add(ast);
             }
+
+            //Defining edge of game depending on resolution
+            Viewport viewport = graphics.GraphicsDevice.Viewport;
+
+            gameBounds = new Rectangle(0, 0, (int)(viewport.Width),(int)(viewport.Height));
 
             base.Initialize();
         }

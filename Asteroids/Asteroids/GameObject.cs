@@ -54,6 +54,8 @@ namespace Asteroids
         private float sRotation;
         //List of objects currently colliding with this object
         private List<GameObject> collidingObjects;
+        //Matrix translation of object's rotation
+        Matrix objectTransform;
 
         //Properties
         public Vector2 SPosition
@@ -81,12 +83,55 @@ namespace Asteroids
         {
             get
             {
-                return new Rectangle
-                    (
-                        (int)((sPosition.X + sOffset.X) - sRectangles[currentIndex].Width / 2),
-                        (int)((sPosition.Y + sOffset.Y) - sRectangles[currentIndex].Height / 2),
-                        sRectangles[currentIndex].Width, sRectangles[currentIndex].Height
-                    );
+                //return CalculateBoundingRectangle(new Rectangle((int)((sPosition.X + sOffset.X) - sRectangles[currentIndex].Width / 2), 
+                //                                                (int)((sPosition.Y + sOffset.Y) - sRectangles[currentIndex].Height / 2), 
+                //                                                sRectangles[currentIndex].Width, sRectangles[currentIndex].Height), objectTransform);
+
+                // Build the block's transform
+                objectTransform = Matrix.CreateTranslation(new Vector3(-sOrigin, 0.0f)) *
+                    Matrix.CreateRotationZ(sRotation) *
+                    Matrix.CreateTranslation(new Vector3(sPosition, 0.0f));
+
+                // Calculate the bounding rectangle of this block in world space
+                return CalculateBoundingRectangle(new Rectangle(0, 0, sRectangles[currentIndex].Width, sRectangles[currentIndex].Height),objectTransform);
+
+                
+                
+                ////Rectangle X start location
+                //int rectX = (int)((sPosition.X + sOffset.X) - sRectangles[currentIndex].Width / 2);
+                ////Rectangle Y start location
+                //int rectY = (int)((sPosition.Y + sOffset.Y) - sRectangles[currentIndex].Height / 2);
+
+                ////Setting collisionrect to 0 if less than 0
+                //if (rectX < 0 && rectY >= 0)
+                //{
+                //    return new Rectangle
+                //    (
+                //        0, rectY,
+                //        sRectangles[currentIndex].Width + rectX, sRectangles[currentIndex].Height
+                //    );
+                //}
+                //else if (rectX >= 0 && rectY < 0)
+                //{
+                //    return new Rectangle
+                //    (
+                //        rectX, 0,
+                //        sRectangles[currentIndex].Width, sRectangles[currentIndex].Height + rectY
+                //    );
+                //}
+                //else if (rectX < 0 && rectY < 0)
+                //{
+                //    return new Rectangle
+                //    (
+                //        0, 0,
+                //        sRectangles[currentIndex].Width + rectX, sRectangles[currentIndex].Height + rectY
+                //    );
+                //}
+                //else
+                //    return new Rectangle
+                //        (
+                //            rectX, rectY, sRectangles[currentIndex].Width, sRectangles[currentIndex].Height
+                //        );
             }
         }
         /// <summary>
@@ -113,7 +158,6 @@ namespace Asteroids
 
              //Adds time that has passed since last update
              timeElapsed += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
              
              //Calculates the current index
              currentIndex = (int)(timeElapsed * fps);
@@ -125,8 +169,11 @@ namespace Asteroids
                  currentIndex = 0;
                  timeElapsed = 0;
              }
-             
+
+             // Calculate this object's transformation (rotation)
              SOrigin = new Vector2(sRectangles[currentIndex].Width / 2, sRectangles[currentIndex].Height / 2);
+
+             //objectTransform = Matrix.CreateTranslation(new Vector3(-sOrigin, 0.0f)) * Matrix.CreateRotationZ(sRotation) * Matrix.CreateTranslation(new Vector3(sPosition, 0.0f));
 
              HandleCollision();
          }
@@ -188,7 +235,7 @@ namespace Asteroids
              {   //We have a box collision
                  if (obj != this && obj.CollisionRect.Intersects(this.CollisionRect))
                  {
-                     if (PixelCollision(obj)) //Checks if we have a pixel collision
+                     if (IntersectPixels(obj)) //Checks if we have a pixel collision
                      {
                          // We have a pixelCollision
                          if (!collidingObjects.Exists(x => x == obj))
@@ -207,37 +254,84 @@ namespace Asteroids
 
              }
          }
-         private bool PixelCollision(GameObject other)
+
+#region not working pixel collision
+         /// <summary>
+         /// Determines if there is overlap of the non-transparent pixels between two
+         /// sprites.
+         /// </summary>
+         /// <param name="transformA">World transform of the first sprite.</param>
+         /// <param name="widthA">Width of the first sprite's texture.</param>
+         /// <param name="heightA">Height of the first sprite's texture.</param>
+         /// <param name="dataA">Pixel color data of the first sprite.</param>
+         /// <param name="transformB">World transform of the second sprite.</param>
+         /// <param name="widthB">Width of the second sprite's texture.</param>
+         /// <param name="heightB">Height of the second sprite's texture.</param>
+         /// <param name="dataB">Pixel color data of the second sprite.</param>
+         /// <returns>True if non-transparent pixels overlap; false otherwise</returns>
+         
+         //private bool IntersectPixels(Matrix transformA, int widthA, int heightA, Color[] dataA,
+         //                             Matrix transformB, int widthB, int heightB, Color[] dataB)
+         private bool IntersectPixels(GameObject other)
          {
-             // Find the bounds of the rectangle intersection
-             int top = Math.Max(this.CollisionRect.Top, other.CollisionRect.Top);
-             int bottom = Math.Min(this.CollisionRect.Bottom, other.CollisionRect.Bottom);
-             int left = Math.Max(this.CollisionRect.Left, other.CollisionRect.Left);
-             int right = Math.Min(this.CollisionRect.Right, other.CollisionRect.Right);
+             // Calculate a matrix which transforms from A's local space into
+             // world space and then into B's local space
+             Matrix transformAToB = objectTransform * Matrix.Invert(other.objectTransform);
 
-             for (int y = top; y < bottom; y++)
+             // When a point moves in A's local space, it moves in B's local space with a
+             // fixed direction and distance proportional to the movement in A.
+             // This algorithm steps through A one pixel at a time along A's X and Y axes
+             // Calculate the analogous steps in B:
+             Vector2 stepX = Vector2.TransformNormal(Vector2.UnitX, transformAToB);
+             Vector2 stepY = Vector2.TransformNormal(Vector2.UnitY, transformAToB);
+
+             // Calculate the top left corner of A in B's local space
+             // This variable will be reused to keep track of the start of each row
+             Vector2 yPosInB = Vector2.Transform(Vector2.Zero, transformAToB);
+
+             // For each row of pixels in A
+             for (int yA = 0; yA < sRectangles[currentIndex].Height; yA++)
              {
-                 for (int x = left; x < right; x++)
+                 // Start at the beginning of the row
+                 Vector2 posInB = yPosInB;
+
+                 // For each pixel in this row
+                 for (int xA = 0; xA < sRectangles[currentIndex].Width; xA++)
                  {
-                     //  Color colorA = dataA[(x - rectangleA.Left) + (y - rectangleA.Top) * rectangleA.Width];
-                     // Color colorB = dataB[(x - rectangleB.Left) + (y - rectangleB.Top) * rectangleB.Width];
+                     // Round to the nearest pixel
+                     int xB = (int)Math.Round(posInB.X);
+                     int yB = (int)Math.Round(posInB.Y);
 
-                     //Get the color of both pixels at this point 
-                     Color colorA = animations[currentAnimation].colors[currentIndex]
-                     [(x - CollisionRect.Left) + (y - CollisionRect.Top) * CollisionRect.Width];
-                     Color colorB = other.animations[other.currentAnimation].colors[other.currentIndex]
-                     [(x - other.CollisionRect.Left) + (y - other.CollisionRect.Top) * other.CollisionRect.Width];
-
-                     // If both pixels are not completely transparent
-                     if (colorA.A != 0 && colorB.B != 0)
+                     // If the pixel lies within the bounds of B
+                     if (0 <= xB && xB < other.sRectangles[other.currentIndex].Width &&
+                         0 <= yB && yB < other.sRectangles[other.currentIndex].Height)
                      {
-                         //Then an intersection has been found
-                         return true;
+                        // Get the colors of the overlapping pixels
+                        Color colorA = animations[currentAnimation].colors[currentIndex][xA + yA * sRectangles[currentIndex].Width];
+                        Color colorB = other.animations[other.currentAnimation].colors[other.currentIndex][xB + yB * other.sRectangles[other.currentIndex].Width];
+
+
+                        // If both pixels are not completely transparent,
+                        if (colorA.A != 0 && colorB.A != 0)
+                        {
+                            // then an intersection has been found
+                            return true;
+                        }
                      }
+
+                     // Move to the next pixel in the row
+                     posInB += stepX;
                  }
+
+                 // Move to the next row
+                 yPosInB += stepY;
              }
+
+             // No intersection found
              return false;
          }
+#endregion
+       
 
          /// <summary>
          /// Loads content
@@ -252,5 +346,38 @@ namespace Asteroids
          public abstract void OnCollisionEnter(GameObject other);
 
          public abstract void OnCollisionExit(GameObject other);
+
+         /// <summary>
+         /// Calculates an axis aligned rectangle which fully contains an arbitrarily
+         /// transformed axis aligned rectangle.
+         /// </summary>
+         /// <param name="rectangle">Original bounding rectangle.</param>
+         /// <param name="transform">World transform of the rectangle.</param>
+         /// <returns>A new rectangle which contains the trasnformed rectangle.</returns>
+         public Rectangle CalculateBoundingRectangle(Rectangle rectangle,
+                                                            Matrix transform)
+         {
+             // Get all four corners in local space
+             Vector2 leftTop = new Vector2(rectangle.Left, rectangle.Top);
+             Vector2 rightTop = new Vector2(rectangle.Right, rectangle.Top);
+             Vector2 leftBottom = new Vector2(rectangle.Left, rectangle.Bottom);
+             Vector2 rightBottom = new Vector2(rectangle.Right, rectangle.Bottom);
+
+             // Transform all four corners into work space
+             Vector2.Transform(ref leftTop, ref transform, out leftTop);
+             Vector2.Transform(ref rightTop, ref transform, out rightTop);
+             Vector2.Transform(ref leftBottom, ref transform, out leftBottom);
+             Vector2.Transform(ref rightBottom, ref transform, out rightBottom);
+
+             // Find the minimum and maximum extents of the rectangle in world space
+             Vector2 min = Vector2.Min(Vector2.Min(leftTop, rightTop),
+                                       Vector2.Min(leftBottom, rightBottom));
+             Vector2 max = Vector2.Max(Vector2.Max(leftTop, rightTop),
+                                       Vector2.Max(leftBottom, rightBottom));
+
+             // Return that as a rectangle
+             return new Rectangle((int)min.X, (int)min.Y,
+                                  (int)(max.X - min.X), (int)(max.Y - min.Y));
+         }
     }
 }
