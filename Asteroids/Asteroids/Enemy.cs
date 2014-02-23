@@ -16,8 +16,8 @@ namespace Asteroids
     {
         // Fields
         
-        private Player player;
-        private bool follow;
+        //private Player player;
+        //private bool follow;
 
         // Constructor
 

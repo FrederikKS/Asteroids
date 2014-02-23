@@ -15,14 +15,19 @@ namespace Asteroids
     {
         // Fields
 
-        private bool attacking = false;
-        private Projectile bullet;
-        private float bulletSpeed = 400;
+        private int bulletSpeedBonus = 300;
+        private int shieldBonus = 0;
+        private int attackSpeedBonus = 0;
+        private int mines = 0;
+
+        private float bulletSpeed = 300;
         private int bulletSize = 1;
         private BulletEngineer bulletEngineer;
         private ContentManager bulletContent;
         private Stopwatch stopwatch;
         private int turningSpeed = 4;
+        private bool attacking = false;
+        private Projectile bullet;
         
 
         //Properties
@@ -142,7 +147,7 @@ namespace Asteroids
             
             if (keyState.IsKeyDown(Keys.Space))
             {
-                if (stopwatch.ElapsedMilliseconds > 500)
+                if (stopwatch.ElapsedMilliseconds > 600 - (attackSpeedBonus*100))
                 {
                     attacking = true;
                     stopwatch.Restart();
@@ -179,6 +184,20 @@ namespace Asteroids
         public override void OnCollisionExit(GameObject other)
         {
             this.sColor = Color.White;
+        }
+
+        public void AddBonus(int type)
+        {
+            if (type == 0 && shieldBonus < 1)
+                shieldBonus++;
+            if (type == 1 && mines < 3)
+                mines++;
+            if (type == 2 && attackSpeedBonus < 4)
+                attackSpeedBonus++;
+            if (type == 3 && bulletSpeedBonus < 3)
+                bulletSpeedBonus++;
+            if (type == 5 && bulletSize < 5)
+                bulletSize++;
         }
 
 

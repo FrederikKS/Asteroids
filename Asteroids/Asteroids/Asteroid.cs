@@ -100,6 +100,16 @@ namespace Asteroids
         }
         public void Split()
         {
+
+            int randomChance = rnd.Next(0, 1);
+
+            if (randomChance == 0)
+            {
+                Powerup temp = new Powerup(SPosition, rnd.Next(0, 6));
+                temp.LoadContent(GameManager.Instance.Content);
+                GameManager.Instance.TempList.Add(temp);
+            }
+
             if (size == 3)
             {
                 for (int i = 0; i < 2; i++)

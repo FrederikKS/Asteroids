@@ -12,37 +12,70 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Asteroids
 {
-    class Powerup
+    class Powerup : GameObject
     {
         // Fields
-        
         private int type;
+
+        // Properties
+        public int Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
 
         // Constructor
 
-        public Powerup(Vector2 startPos, int type)
+        public Powerup(Vector2 startPos, int type) : base(startPos)
         {
-
+            this.type = type;
         }
 
-        public void LoadContent(ContentManager content)
+        public override void LoadContent(ContentManager content)
         {
+            STexture = content.Load<Texture2D>("Crystals.png");
+            Color[] colorData = new Color[STexture.Width * STexture.Height];
+            STexture.GetData<Color>(colorData);
+
+            if (type == 0)
+            CreateAnimation("Normal", 1, 0, 0, 18, 36, Vector2.Zero, 10, colorData, STexture.Width);
+            if (type == 1)
+            CreateAnimation("Normal", 1, 0, 1, 18, 36, Vector2.Zero, 10, colorData, STexture.Width);
+            if (type == 2)
+            CreateAnimation("Normal", 1, 0, 2, 18, 36, Vector2.Zero, 10, colorData, STexture.Width);
+            if (type == 3)
+            CreateAnimation("Normal", 1, 0, 3, 18, 36, Vector2.Zero, 10, colorData, STexture.Width);
+            if (type == 4)
+            CreateAnimation("Normal", 1, 0, 4, 18, 36, Vector2.Zero, 10, colorData, STexture.Width);
+            if (type == 5)
+            CreateAnimation("Normal", 1, 0, 5, 18, 36, Vector2.Zero, 10, colorData, STexture.Width);
             
+            PlayAnimation("Normal");
+
+            base.LoadContent(content);
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
 
         }
 
-        public void OnCollisionEnter(GameObject other)
+        public override void OnCollisionEnter(GameObject other)
+        {
+            if (other is Player)
+            {
+                ((Player)other).AddBonus(type);
+                GameManager.Instance.RemoveWhenPossible.Add(this);
+            }
+        }
+
+        public override void OnCollisionExit(GameObject other)
         {
 
         }
 
-        public void OnCollisionExit(GameObject other)
+        public override void OnAnimationDone(string name)
         {
-
         }
     }
 }
