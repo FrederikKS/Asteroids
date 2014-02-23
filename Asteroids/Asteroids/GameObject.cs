@@ -83,55 +83,14 @@ namespace Asteroids
         {
             get
             {
-                //return CalculateBoundingRectangle(new Rectangle((int)((sPosition.X + sOffset.X) - sRectangles[currentIndex].Width / 2), 
-                //                                                (int)((sPosition.Y + sOffset.Y) - sRectangles[currentIndex].Height / 2), 
-                //                                                sRectangles[currentIndex].Width, sRectangles[currentIndex].Height), objectTransform);
-
-                // Build the block's transform
+                // Defining the object's transform - origin, rotation and location
                 objectTransform = Matrix.CreateTranslation(new Vector3(-sOrigin, 0.0f)) *
                     Matrix.CreateRotationZ(sRotation) *
                     Matrix.CreateTranslation(new Vector3(sPosition, 0.0f));
 
-                // Calculate the bounding rectangle of this block in world space
+                // Calculate the edges of the new rectangle
                 return CalculateBoundingRectangle(new Rectangle(0, 0, sRectangles[currentIndex].Width, sRectangles[currentIndex].Height),objectTransform);
 
-                
-                
-                ////Rectangle X start location
-                //int rectX = (int)((sPosition.X + sOffset.X) - sRectangles[currentIndex].Width / 2);
-                ////Rectangle Y start location
-                //int rectY = (int)((sPosition.Y + sOffset.Y) - sRectangles[currentIndex].Height / 2);
-
-                ////Setting collisionrect to 0 if less than 0
-                //if (rectX < 0 && rectY >= 0)
-                //{
-                //    return new Rectangle
-                //    (
-                //        0, rectY,
-                //        sRectangles[currentIndex].Width + rectX, sRectangles[currentIndex].Height
-                //    );
-                //}
-                //else if (rectX >= 0 && rectY < 0)
-                //{
-                //    return new Rectangle
-                //    (
-                //        rectX, 0,
-                //        sRectangles[currentIndex].Width, sRectangles[currentIndex].Height + rectY
-                //    );
-                //}
-                //else if (rectX < 0 && rectY < 0)
-                //{
-                //    return new Rectangle
-                //    (
-                //        0, 0,
-                //        sRectangles[currentIndex].Width + rectX, sRectangles[currentIndex].Height + rectY
-                //    );
-                //}
-                //else
-                //    return new Rectangle
-                //        (
-                //            rectX, rectY, sRectangles[currentIndex].Width, sRectangles[currentIndex].Height
-                //        );
             }
         }
         /// <summary>
