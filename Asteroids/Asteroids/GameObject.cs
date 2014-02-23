@@ -88,7 +88,7 @@ namespace Asteroids
         {
             get
             {
-                // Defining the object's transform - origin, rotation and location
+                // Defining the object's transform: origin, rotation and location
                 objectTransform = Matrix.CreateTranslation(new Vector3(-sOrigin, 0.0f)) *
                     Matrix.CreateRotationZ(sRotation) *
                     Matrix.CreateTranslation(new Vector3(sPosition, 0.0f));

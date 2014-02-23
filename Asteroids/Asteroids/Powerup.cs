@@ -62,11 +62,6 @@ namespace Asteroids
 
         public override void OnCollisionEnter(GameObject other)
         {
-            if (other is Player)
-            {
-                ((Player)other).AddBonus(type);
-                GameManager.Instance.RemoveWhenPossible.Add(this);
-            }
         }
 
         public override void OnCollisionExit(GameObject other)
