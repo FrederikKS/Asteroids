@@ -250,7 +250,7 @@ namespace Asteroids
                 spriteBatch.DrawString(sf, "Bullet Size:", new Vector2(864, worldSizeY - 30), Color.White);
                 for (int i = 1; i < player.BulletSize; i++)
                 {
-                    spriteBatch.Draw(main.InGame.Find(x => x.AssetName == "GUI/CryYellow.png").GetGUITexture, new Rectangle(980 + (20 * i), worldSizeY - 40, main.InGame.Find(x => x.AssetName == "GUI/CryYellow.png").GetGUITexture.Width, main.InGame.Find(x => x.AssetName == "GUI/CryYellow.png").GetGUITexture.Height), Color.White);
+                    spriteBatch.Draw(main.InGame.Find(x => x.AssetName == "GUI/CryYellow.png").GetGUITexture, new Rectangle(1000 + (20 * i), worldSizeY - 40, main.InGame.Find(x => x.AssetName == "GUI/CryYellow.png").GetGUITexture.Width, main.InGame.Find(x => x.AssetName == "GUI/CryYellow.png").GetGUITexture.Height), Color.White);
                 }
                 
 
