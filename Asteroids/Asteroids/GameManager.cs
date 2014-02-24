@@ -15,7 +15,7 @@ namespace Asteroids
         private List<GameObject> tempList;
         private List<GameObject> removeWhenPossible;
         private int score;
-        private int lifes;
+        private int lives;
 
         //Properties
         public ContentManager Content
@@ -59,10 +59,10 @@ namespace Asteroids
             set { score = value; }
         }
 
-        public int Lifes
+        public int Lives
         {
-            get { return lifes; }
-            set { lifes = value; }
+            get { return lives; }
+            set { lives = value; }
         }
 
         //Constructor

@@ -56,8 +56,6 @@ namespace Asteroids
         private List<GameObject> collidingObjects;
         //Matrix translation of object's rotation
         Matrix objectTransform;
-        //Score for destroying
-        protected int score;
 
 
         //Properties

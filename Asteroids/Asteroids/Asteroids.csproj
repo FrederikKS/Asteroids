@@ -48,8 +48,10 @@
     <Compile Include="GameManager.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameWindowExtension.cs" />
+    <Compile Include="GUIElement.cs" />
     <Compile Include="IAsteroidBuilder.cs" />
     <Compile Include="IBulletBuilder.cs" />
+    <Compile Include="MainMenu.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Powerup.cs" />
     <Compile Include="Program.cs" />
@@ -165,6 +167,24 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Exhaust3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\GUI\background.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\GUI\MenuName.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\GUI\MenuQuit.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\GUI\MenuStart.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\GUI\NameField.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\GUI\NameOK.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\spaceship.png">

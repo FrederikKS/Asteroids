@@ -26,11 +26,15 @@ namespace Asteroids
         private int worldSizeX;
         private int worldSizeY;
         private List<Asteroid> astWave = new List<Asteroid>();
-        private int asteroidCount = 4;
+        private int asteroidCount = 2;
         Random rnd = new Random();
         SpriteFont sf;
-        private bool levelCleared = false;
+
+        private int level;
         private int currentAsteroids;
+
+        MainMenu main = new MainMenu();
+
         //private int astSpawn;
         
         public Game1()
@@ -56,13 +60,11 @@ namespace Asteroids
             // TODO: Add your initialization logic here
 
             // Centers the window to the center of the resolution
-
             Window.SetPosition(new Point(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 6, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 6));
 
-            player = new Player(new Vector2(100, 100));
-            //enemy = new Enemy(new Vector2(100, 100));
+            //Instantiate Game Content
+            player = new Player(new Vector2(worldSizeX/2, worldSizeY/2));
             GameManager.Instance.AllObjects.Add(player);
-            //GameManager.Instance.AllObjects.Add(enemy);
             GameManager.Instance.Content = Content;
 
             for (int i = 0; i < asteroidCount; i++)
@@ -70,12 +72,11 @@ namespace Asteroids
                 AsteroidEngineer engineer = new AsteroidEngineer(new AsteroidLarge(new Vector2(rnd.Next(0, worldSizeX), rnd.Next(0, worldSizeY)), 0));
                 engineer.BuildAsteroid();
                 asteroid = engineer.GetAsteroid;
-                astWave.Add(asteroid);
+                GameManager.Instance.TempList.Add(asteroid);
             }
-            foreach (Asteroid ast in astWave)
-            {
-                GameManager.Instance.AllObjects.Add(ast);
-            }
+
+            //Instantiating level int
+            level = 1;
 
             base.Initialize();
         }
@@ -90,13 +91,18 @@ namespace Asteroids
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            
-            // Adds asteroids to a list
 
-            sf = Content.Load<SpriteFont>("SpriteFont1");
+            // Menu
+            main.LoadContent(Content);
+            
+            // Background Image
             background = Content.Load<Texture2D>(@"BackgroundRed");
             bgRec = new Rectangle(0, 0, background.Width, background.Height);
-     
+
+            // Font
+            sf = Content.Load<SpriteFont>("SpriteFont1");
+
+            // All current Game Objects
             foreach (GameObject obj in GameManager.Instance.AllObjects)
             {
                 obj.LoadContent(Content);
@@ -123,57 +129,55 @@ namespace Asteroids
                 Exit();
 
             // TODO: Add your update logic here
-            // Adding temp objects to object list
-            foreach (GameObject temp in GameManager.Instance.TempList)
+
+            // Menu
+            main.Update();
+            if (main.gameState == GameState.inGame)
             {
-                if (!GameManager.Instance.AllObjects.Contains(temp))
-                    GameManager.Instance.AllObjects.Add(temp);
-            }
-            
-            //Clearing list of temp objects
-            GameManager.Instance.TempList.Clear();
-
-            //Clearing list of objects ready to be removed
-            foreach (GameObject temp in GameManager.Instance.RemoveWhenPossible)
-            {
-                if (GameManager.Instance.AllObjects.Contains(temp))
-                    GameManager.Instance.AllObjects.Remove(temp);
-            }
-            GameManager.Instance.RemoveWhenPossible.Clear();
-
-
-            //Update all objects currently in the game
-            foreach (GameObject obj in GameManager.Instance.AllObjects)
-            {
-                if (obj is Asteroid)
+                // Adding temp objects to object list
+                foreach (GameObject temp in GameManager.Instance.TempList)
                 {
-                    levelCleared = false; ;
+                    if (!GameManager.Instance.AllObjects.Contains(temp))
+                        GameManager.Instance.AllObjects.Add(temp);
                 }
-                else
-                {
-                    levelCleared = true;
-                }
-                obj.Update(gameTime);
-            }
 
-            if (levelCleared == true)
-            {
-                asteroidCount++;
+                //Clearing list of temp objects
+                GameManager.Instance.TempList.Clear();
 
-                for (int i = 0; i < asteroidCount; i++)
+                //Clearing list of objects ready to be removed
+                foreach (GameObject temp in GameManager.Instance.RemoveWhenPossible)
                 {
-                    AsteroidEngineer engineer = new AsteroidEngineer(new AsteroidLarge(new Vector2(rnd.Next(0, worldSizeX), rnd.Next(0, worldSizeY)), 0));
-                    engineer.BuildAsteroid();
-                    asteroid = engineer.GetAsteroid;
-                    astWave.Add(asteroid);
+                    if (GameManager.Instance.AllObjects.Contains(temp))
+                        GameManager.Instance.AllObjects.Remove(temp);
                 }
-                foreach (Asteroid ast in astWave)
+                GameManager.Instance.RemoveWhenPossible.Clear();
+
+                //Set current Asteroids to 0
+                currentAsteroids = 0;
+
+                //Update all objects currently in the game
+                foreach (GameObject obj in GameManager.Instance.AllObjects)
                 {
-                    GameManager.Instance.AllObjects.Add(ast);
+                    if (obj is Asteroid)
+                    {
+                        currentAsteroids++;
+                    }
+                    obj.Update(gameTime);
+                }
+
+                if (currentAsteroids == 0)
+                {
+                    level++;
+
+                    for (int i = 0; i < level + 2; i++)
+                    {
+                        AsteroidEngineer engineer = new AsteroidEngineer(new AsteroidLarge(new Vector2(rnd.Next(0, worldSizeX), rnd.Next(0, worldSizeY)), 0));
+                        engineer.BuildAsteroid();
+                        asteroid = engineer.GetAsteroid;
+                        GameManager.Instance.TempList.Add(asteroid);
+                    }
                 }
             }
-
-            levelCleared = false;
 
             base.Update(gameTime);
         }
@@ -187,25 +191,37 @@ namespace Asteroids
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
+            // Drawing Background
             spriteBatch.Draw(background, bgRec, Color.White);
-            foreach (GameObject obj in GameManager.Instance.AllObjects)
+
+            // Menu
+            main.Draw(spriteBatch);
+
+            if (main.gameState == GameState.inGame)
             {
-                obj.Draw(spriteBatch);
+                foreach (GameObject obj in GameManager.Instance.AllObjects)
+                {
+                    obj.Draw(spriteBatch);
+                }
+
+                //GUI
+                //Top Left
+                spriteBatch.DrawString(sf, "Name:", new Vector2(10, 10), Color.White);
+                spriteBatch.DrawString(sf, main.MyName, new Vector2(100, 10), Color.White);
+                spriteBatch.DrawString(sf, "Score:", new Vector2(10, 30), Color.White);
+                spriteBatch.DrawString(sf, GameManager.Instance.Score.ToString(), new Vector2(100, 30), Color.White);
+
+                //Top Right
+                spriteBatch.DrawString(sf, "Lives:", new Vector2(worldSizeX - 150, 10), Color.White);
+                spriteBatch.DrawString(sf, GameManager.Instance.Lives.ToString(), new Vector2(worldSizeX - 70, 10), Color.White);
+                spriteBatch.DrawString(sf, "Level:", new Vector2(worldSizeX - 150, 30), Color.White);
+                spriteBatch.DrawString(sf, level.ToString(), new Vector2(worldSizeX - 70, 30), Color.White);
             }
 
-            spriteBatch.DrawString(sf, "Score:", new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(sf, GameManager.Instance.Score.ToString(), new Vector2(100, 10), Color.White);
-            spriteBatch.DrawString(sf, "Lifes:", new Vector2(worldSizeX - 150, 10), Color.White);
-            spriteBatch.DrawString(sf, GameManager.Instance.Lifes.ToString(), new Vector2(worldSizeX - 70, 10), Color.White);
 
             spriteBatch.End();
             // TODO: Add your drawing code here
             base.Draw(gameTime);
-        }
-
-        double NextDouble(Random rnd, double min, double max)
-        {
-            return min + (rnd.NextDouble() * (max - min));
         }
     }
 }
