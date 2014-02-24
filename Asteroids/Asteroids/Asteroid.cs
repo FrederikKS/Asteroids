@@ -107,7 +107,7 @@ namespace Asteroids
             {
                 Powerup temp = new Powerup(SPosition, rnd.Next(0, 6));
                 temp.LoadContent(GameManager.Instance.Content);
-                GameManager.Instance.TempList.Add(temp);
+                GameManager.Instance.TempList.Add(temp);                
             }
 
             if (size == 3)
@@ -131,6 +131,7 @@ namespace Asteroids
             
             
             GameManager.Instance.RemoveWhenPossible.Add(this);
+            GameManager.Instance.Score += 50;
         }
     }
 }

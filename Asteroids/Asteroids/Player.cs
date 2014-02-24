@@ -196,13 +196,15 @@ namespace Asteroids
         {
             if (type == 0 && shieldBonus < 1)
                 shieldBonus++;
-            if (type == 1 && mines < 3)
+            else if (type == 1 && mines < 3)
                 mines++;
-            if (type == 2 && attackSpeed > 200)
+            else if (type == 2 && attackSpeed > 200)
                 attackSpeed = attackSpeed - 100;
-            if (type == 3 && bulletSpeedBonus < 3)
+            else if (type == 3 && bulletSpeedBonus < 3)
                 bulletSpeedBonus++;
-            if (type == 5 && bulletSize < 5)
+            else if (type == 4)
+                GameManager.Instance.Score += 50;
+            else if (type == 5 && bulletSize < 5)
                 bulletSize++;
         }
 
