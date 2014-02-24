@@ -15,7 +15,7 @@ namespace Asteroids
         private List<GameObject> tempList;
         private List<GameObject> removeWhenPossible;
         private int score;
-        private int lives;
+        private int lives = 3;
 
         //Properties
         public ContentManager Content

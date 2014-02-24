@@ -206,7 +206,10 @@ namespace Asteroids
                 AddBonus(((Powerup)other).Type);
                 GameManager.Instance.RemoveWhenPossible.Add(other);
             }
-
+            if (other is Asteroid)
+            {
+                GameManager.Instance.Lives--;
+            }
         }
 
         public override void OnCollisionExit(GameObject other)
