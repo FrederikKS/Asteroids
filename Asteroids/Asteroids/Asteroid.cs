@@ -17,7 +17,9 @@ namespace Asteroids
         // Fields 
         private int size;
         private int type;
+        private float volume = 0.7f;
         private Random rnd = new Random();
+        private SoundEffect destroyEffect;
 
         //Properties
         public int Size
@@ -47,6 +49,9 @@ namespace Asteroids
 
             //CreateAnimation("Normal", 1, 0, 0, 120, 120, Vector2.Zero, 10, colorData, STexture.Width);
             //PlayAnimation("Normal");
+
+            // Loading sound effect
+            destroyEffect = content.Load<SoundEffect>("explosion-2");
 
             base.LoadContent(content);
         }
@@ -132,6 +137,12 @@ namespace Asteroids
             
             GameManager.Instance.RemoveWhenPossible.Add(this);
             GameManager.Instance.Score += 50;
+
+            //Sound effect
+            SoundEffectInstance destroyInstance = destroyEffect.CreateInstance();
+            destroyInstance.IsLooped = false;
+            destroyInstance.Volume = volume;
+            destroyInstance.Play();
         }
     }
 }

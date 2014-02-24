@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Audio;
 #endregion
 
 namespace Asteroids
@@ -29,6 +30,8 @@ namespace Asteroids
         private int asteroidCount = 2;
         Random rnd = new Random();
         SpriteFont sf;
+        SoundEffect bckMusic;
+        private float volume = 0.4f;
 
         private int level;
         private int currentAsteroids;
@@ -98,6 +101,14 @@ namespace Asteroids
             // Background Image
             background = Content.Load<Texture2D>(@"BackgroundRed");
             bgRec = new Rectangle(0, 0, background.Width, background.Height);
+
+            // Looping background music and adjusting volume.
+            bckMusic = Content.Load<SoundEffect>(@"Cosmo Blast v1_0");
+            SoundEffectInstance soundEffectInstance = bckMusic.CreateInstance();
+            soundEffectInstance.IsLooped = true;
+            soundEffectInstance.Volume = volume;
+            soundEffectInstance.Play();
+            
 
             // Font
             sf = Content.Load<SpriteFont>("SpriteFont1");
@@ -177,6 +188,11 @@ namespace Asteroids
                         GameManager.Instance.TempList.Add(asteroid);
                     }
                 }
+
+                //if (main.gameState == GameState.inGame && GameManager.Instance.Lives == 0)
+                //{
+
+                //}                              
             }
 
             base.Update(gameTime);
@@ -255,7 +271,6 @@ namespace Asteroids
                 
 
             }
-
 
             spriteBatch.End();
             // TODO: Add your drawing code here

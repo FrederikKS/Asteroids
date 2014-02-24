@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Asteroids
 {
-    public enum GameState { mainMenu, enterName, inGame }
+    public enum GameState { mainMenu, enterName, inGame, highScore }
  
     class MainMenu
     {

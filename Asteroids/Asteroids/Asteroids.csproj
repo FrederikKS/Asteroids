@@ -49,6 +49,7 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="GameWindowExtension.cs" />
     <Compile Include="GUIElement.cs" />
+    <Compile Include="HighScore.cs" />
     <Compile Include="IAsteroidBuilder.cs" />
     <Compile Include="IBulletBuilder.cs" />
     <Compile Include="MainMenu.cs" />
@@ -142,6 +143,9 @@
     <Content Include="Content\CollisionTexture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Cosmo Blast v1_0.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Crystals.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -149,6 +153,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Exhaust3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\explosion-1.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\explosion-2.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\GUI\background.png">
@@ -185,6 +195,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\GUI\NameOK.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\laser3.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\spaceship.png">

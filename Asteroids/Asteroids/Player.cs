@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using System.Diagnostics;
 
 namespace Asteroids
@@ -29,6 +30,9 @@ namespace Asteroids
         private int turningSpeed = 4;
         private bool attacking = false;
         private Projectile bullet;
+        private SoundEffect laserEffect;
+        private SoundEffect damageEffect;
+        private float volume = 1.0f;
         
 
         //Properties
@@ -81,10 +85,17 @@ namespace Asteroids
 
         public override void LoadContent(ContentManager content)
         {
+            // Loads texture
             STexture = content.Load<Texture2D>("spaceship.png");
             Color[] colorData = new Color[STexture.Width * STexture.Height];
             STexture.GetData<Color>(colorData);
 
+            // Loads sound effects
+            laserEffect = content.Load<SoundEffect>("laser3");
+            damageEffect = content.Load<SoundEffect>("explosion-1");
+
+
+            // Creates animation for spaceship
             CreateAnimation("Normal", 1, 0, 2, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
             CreateAnimation("TurnLeft", 2, 0, 0, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
             CreateAnimation("TurnLeftFull", 1, 0, 1, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
@@ -171,7 +182,14 @@ namespace Asteroids
                 if (stopwatch.ElapsedMilliseconds > attackSpeed - (attackSpeedBonus*100))
                 {
                     attacking = true;
-                    stopwatch.Restart();
+
+                    //Sound effect
+                    SoundEffectInstance laserInstance = laserEffect.CreateInstance();
+                    laserInstance.IsLooped = false;
+                    laserInstance.Volume = volume;
+                    laserInstance.Play();
+
+                    stopwatch.Restart();                   
                 }
             }
 
@@ -209,6 +227,12 @@ namespace Asteroids
             if (other is Asteroid)
             {
                 GameManager.Instance.Lives--;
+
+                //Sound effect
+                SoundEffectInstance damageInstance = damageEffect.CreateInstance();
+                damageInstance.IsLooped = false;
+                damageInstance.Volume = volume;
+                damageInstance.Play();
             }
         }
 
