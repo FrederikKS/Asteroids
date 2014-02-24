@@ -15,11 +15,12 @@ namespace Asteroids
     {
         // Fields
 
-        private int bulletSpeedBonus = 300;
+        private int bulletSpeedBonus = 0;
         private int shieldBonus = 0;
-        private int attackSpeed = 600;
+        private int attackSpeedBonus = 0;
         private int mines = 0;
 
+        private int attackSpeed = 600;
         private float bulletSpeed = 300;
         private int bulletSize = 1;
         private BulletEngineer bulletEngineer;
@@ -31,6 +32,11 @@ namespace Asteroids
         
 
         //Properties
+        public int AttackSpeedBonus
+        {
+            get { return attackSpeedBonus; }
+            set { attackSpeedBonus = value; }
+        }
         public int BulletSize
         {
             get { return bulletSize; }
@@ -40,6 +46,21 @@ namespace Asteroids
         {
             get { return bulletSpeed; }
             set { bulletSpeed = value; }
+        }
+        public int BulletSpeedBonus
+        {
+            get { return bulletSpeedBonus; }
+            set { bulletSpeedBonus = value; }
+        }
+        public int ShieldBonus
+        {
+            get { return shieldBonus; }
+            set { shieldBonus = value; }
+        }
+        public int Mines
+        {
+            get { return mines; }
+            set { mines = value; }
         }
         public ContentManager BulletContent
         {
@@ -147,7 +168,7 @@ namespace Asteroids
             
             if (keyState.IsKeyDown(Keys.Space))
             {
-                if (stopwatch.ElapsedMilliseconds > attackSpeed)
+                if (stopwatch.ElapsedMilliseconds > attackSpeed - (attackSpeedBonus*100))
                 {
                     attacking = true;
                     stopwatch.Restart();
@@ -157,6 +178,7 @@ namespace Asteroids
             if (attacking)
             {
                 //Shoot projectile
+                bulletSpeed = 300 + bulletSpeedBonus * 100;
                 bulletEngineer = new BulletEngineer(new Bullet(this));
                 bulletEngineer.BuildBullet();
                 bullet = bulletEngineer.GetBullet;
@@ -198,8 +220,8 @@ namespace Asteroids
                 shieldBonus++;
             else if (type == 1 && mines < 3)
                 mines++;
-            else if (type == 2 && attackSpeed > 200)
-                attackSpeed = attackSpeed - 100;
+            else if (type == 2 && attackSpeedBonus < 4)
+                attackSpeedBonus++;
             else if (type == 3 && bulletSpeedBonus < 3)
                 bulletSpeedBonus++;
             else if (type == 4)

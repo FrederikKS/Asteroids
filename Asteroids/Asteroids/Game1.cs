@@ -216,6 +216,44 @@ namespace Asteroids
                 spriteBatch.DrawString(sf, GameManager.Instance.Lives.ToString(), new Vector2(worldSizeX - 70, 10), Color.White);
                 spriteBatch.DrawString(sf, "Level:", new Vector2(worldSizeX - 150, 30), Color.White);
                 spriteBatch.DrawString(sf, level.ToString(), new Vector2(worldSizeX - 70, 30), Color.White);
+
+                //Bottom
+                //Shield
+                spriteBatch.DrawString(sf, "Shield:", new Vector2(10, worldSizeY - 30), Color.White);
+                for (int i = 0; i < player.ShieldBonus; i++)
+                {
+                    spriteBatch.Draw(main.InGame.Find(x => x.AssetName == "GUI/CryGreen.png").GetGUITexture, new Rectangle(100 + (20*i), worldSizeY - 40, main.InGame.Find(x => x.AssetName == "GUI/CryGreen.png").GetGUITexture.Width, main.InGame.Find(x => x.AssetName == "GUI/CryGreen.png").GetGUITexture.Height), Color.White);
+                }
+
+                //Mines
+                spriteBatch.DrawString(sf, "Mines:", new Vector2(150, worldSizeY - 30), Color.White);
+                for (int i = 0; i < player.Mines; i++)
+                {
+                    spriteBatch.Draw(main.InGame.Find(x => x.AssetName == "GUI/CryBrown.png").GetGUITexture, new Rectangle(220 + (20 * i), worldSizeY - 40, main.InGame.Find(x => x.AssetName == "GUI/CryBrown.png").GetGUITexture.Width, main.InGame.Find(x => x.AssetName == "GUI/CryBrown.png").GetGUITexture.Height), Color.White);
+                }
+
+                //Attack Speed
+                spriteBatch.DrawString(sf, "Attack Speed:", new Vector2(300, worldSizeY - 30), Color.White);
+                for (int i = 0; i < player.AttackSpeedBonus; i++)
+                {
+                    spriteBatch.Draw(main.InGame.Find(x => x.AssetName == "GUI/CryRed.png").GetGUITexture, new Rectangle(480 + (20 * i), worldSizeY - 40, main.InGame.Find(x => x.AssetName == "GUI/CryRed.png").GetGUITexture.Width, main.InGame.Find(x => x.AssetName == "GUI/CryRed.png").GetGUITexture.Height), Color.White);
+                }
+
+                //Bullet Speed
+                spriteBatch.DrawString(sf, "Bullet Speed:", new Vector2(580, worldSizeY - 30), Color.White);
+                for (int i = 0; i < player.BulletSpeedBonus; i++)
+                {
+                    spriteBatch.Draw(main.InGame.Find(x => x.AssetName == "GUI/CryPurple.png").GetGUITexture, new Rectangle(764 + (20 * i), worldSizeY - 40, main.InGame.Find(x => x.AssetName == "GUI/CryPurple.png").GetGUITexture.Width, main.InGame.Find(x => x.AssetName == "GUI/CryPurple.png").GetGUITexture.Height), Color.White);
+                }
+
+                //Bullet Size
+                spriteBatch.DrawString(sf, "Bullet Size:", new Vector2(864, worldSizeY - 30), Color.White);
+                for (int i = 1; i < player.BulletSize; i++)
+                {
+                    spriteBatch.Draw(main.InGame.Find(x => x.AssetName == "GUI/CryYellow.png").GetGUITexture, new Rectangle(980 + (20 * i), worldSizeY - 40, main.InGame.Find(x => x.AssetName == "GUI/CryYellow.png").GetGUITexture.Width, main.InGame.Find(x => x.AssetName == "GUI/CryYellow.png").GetGUITexture.Height), Color.White);
+                }
+                
+
             }
 
 

@@ -12,6 +12,7 @@ namespace Asteroids
     class GUIElement
     {
         private Texture2D GUITexture;
+
         private Rectangle GUIRect;
 
         private string assetName;
@@ -20,6 +21,11 @@ namespace Asteroids
 
         public event ElementClicked clickEvent;
 
+        public Texture2D GetGUITexture
+        {
+            get { return GUITexture; }
+            set { GUITexture = value; }
+        }
         public string AssetName
         {
             get { return assetName; }

@@ -17,6 +17,7 @@ namespace Asteroids
         public GameState gameState;
         List<GUIElement> main = new List<GUIElement>();
         List<GUIElement> enterName = new List<GUIElement>();
+        List<GUIElement> inGame = new List<GUIElement>();
 
         private Keys[] lastPressedKeys = new Keys[5];
 
@@ -30,6 +31,11 @@ namespace Asteroids
             get { return myName; }
             set { myName = value; }
         }
+        public List<GUIElement> InGame
+        {
+            get { return inGame; }
+            set { inGame = value; }
+        }
 
         //Constructor
         public MainMenu()
@@ -41,6 +47,13 @@ namespace Asteroids
 
             enterName.Add(new GUIElement("GUI/NameField"));
             enterName.Add(new GUIElement("GUI/NameOK.png"));
+
+            inGame.Add(new GUIElement("GUI/CryBlue.png"));
+            inGame.Add(new GUIElement("GUI/CryBrown.png"));
+            inGame.Add(new GUIElement("GUI/CryGreen.png"));
+            inGame.Add(new GUIElement("GUI/CryPurple.png"));
+            inGame.Add(new GUIElement("GUI/CryRed.png"));
+            inGame.Add(new GUIElement("GUI/CryYellow.png"));
         }
 
         public void LoadContent(ContentManager content)
@@ -63,6 +76,11 @@ namespace Asteroids
             }
 
             enterName.Find(x => x.AssetName == "GUI/NameOK.png").MoveElement(0, 50);
+
+            foreach(GUIElement game in inGame)
+            {
+                game.LoadContent(content);
+            }
 
         }
 
