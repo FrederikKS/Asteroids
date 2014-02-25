@@ -101,6 +101,13 @@ namespace Asteroids
             CreateAnimation("TurnLeftFull", 1, 0, 1, 48, 60, Vector2.Zero, 10, colorData, STexture.Width);
             CreateAnimation("TurnRight", 2, 0, 3, 48, 60, Vector2.Zero, 10, colorData, STexture.Width);
             CreateAnimation("TurnRightFull", 1, 0, 4, 48, 60, Vector2.Zero, 10, colorData, STexture.Width);
+
+            // Creates animations for spaceship exhaust
+            CreateAnimation("ExhaustNormal", 3, 58, 2, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("ExhaustTurnLeft", 2, 0, 0, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("ExhaustTurnLeftFull", 1, 0, 1, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("ExhaustTurnRight", 2, 0, 3, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("ExhaustTurnRightFull", 1, 0, 4, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
             PlayAnimation("Normal");
 
             bulletContent = content;
@@ -156,6 +163,7 @@ namespace Asteroids
             if (keyState.IsKeyDown(Keys.W))
             {
                 sVelocity = new Vector2((float)Math.Cos(SRotation - 1.57079f), (float)Math.Sin(SRotation - 1.57079f));
+                PlayAnimation("ExhaustNormal");
             }
 
             if (keyState.IsKeyDown(Keys.A))
