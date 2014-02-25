@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace Asteroids
 {
-    enum State { Turning, Idle }
+    enum State { Turning, Idle, Throttle }
     class Player : GameObject
     {
         // Fields
@@ -103,11 +103,11 @@ namespace Asteroids
             CreateAnimation("TurnRightFull", 1, 0, 4, 48, 60, Vector2.Zero, 10, colorData, STexture.Width);
 
             // Creates animations for spaceship exhaust
-            CreateAnimation("ExhaustNormal", 3, 58, 2, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
-            CreateAnimation("ExhaustTurnLeft", 2, 0, 0, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
-            CreateAnimation("ExhaustTurnLeftFull", 1, 0, 1, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
-            CreateAnimation("ExhaustTurnRight", 2, 0, 3, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
-            CreateAnimation("ExhaustTurnRightFull", 1, 0, 4, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("ExhaustNormal", 1, 58, 2, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("ExhaustTurnLeft", 2, 58, 0, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("ExhaustTurnLeftFull", 1, 58, 1, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("ExhaustTurnRight", 2, 58, 3, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("ExhaustTurnRightFull", 1, 58, 4, 48, 90, Vector2.Zero, 10, colorData, STexture.Width);
             PlayAnimation("Normal");
 
             bulletContent = content;
@@ -163,20 +163,29 @@ namespace Asteroids
             if (keyState.IsKeyDown(Keys.W))
             {
                 sVelocity = new Vector2((float)Math.Cos(SRotation - 1.57079f), (float)Math.Sin(SRotation - 1.57079f));
+                state = State.Throttle;
                 PlayAnimation("ExhaustNormal");
             }
 
             if (keyState.IsKeyDown(Keys.A))
             {
-                if (!currentAnimation.Contains("TurnLeftFull"))
-                PlayAnimation("TurnLeft");
+                if (!currentAnimation.Contains("TurnLeftFull") && state == State.Idle)
+                    PlayAnimation("TurnLeft");
+
+                if (!currentAnimation.Contains("ExhaustTurnLeftFull") && state == State.Throttle)
+                    PlayAnimation("ExhaustTurnLeft");
+
                 state = State.Turning;
                 SRotation = SRotation - (float)(turningSpeed * Math.PI / 180);
             }
             if (keyState.IsKeyDown(Keys.D))
             {
-                if(!currentAnimation.Contains("TurnRightFull"))
-                PlayAnimation("TurnRight");
+                if (!currentAnimation.Contains("TurnRightFull") && state == State.Idle)
+                    PlayAnimation("TurnRight");
+
+                if (!currentAnimation.Contains("ExhaustTurnRightFull") && state == State.Throttle)
+                    PlayAnimation("ExhaustTurnRight");
+
                 state = State.Turning;
                 SRotation = SRotation + (float)(turningSpeed * Math.PI / 180);
             }
@@ -221,6 +230,10 @@ namespace Asteroids
                 PlayAnimation("TurnLeftFull");
             if (name.Contains("TurnRight"))
                 PlayAnimation("TurnRightFull");
+            if (name.Contains("ExhaustTurnLeft"))
+                PlayAnimation("ExhaustTurnLeftFull");
+            if (name.Contains("ExhaustTurnRight"))
+                PlayAnimation("ExhaustTurnRightFull");
         }
 
         public override void OnCollisionEnter(GameObject other)
