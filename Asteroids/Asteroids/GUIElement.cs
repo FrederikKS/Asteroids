@@ -16,6 +16,8 @@ namespace Asteroids
         private Rectangle GUIRect;
 
         private string assetName;
+        private float rotation = 0;
+        private SpriteEffects sEffect = new SpriteEffects();
 
         public delegate void ElementClicked(string element);
 
@@ -53,7 +55,12 @@ namespace Asteroids
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(GUITexture, GUIRect, Color.White);
+            //spriteBatch.Draw(sTexture, sPosition + sOffset, sRectangles[currentIndex], sColor, sRotation, sOrigin, scale, sEffect, sLayer);
+            if (this.assetName == "GUI/background.png")
+                spriteBatch.Draw(GUITexture, new Vector2(GUIRect.Location.X, GUIRect.Location.Y) + new Vector2(GUIRect.Width/2, GUIRect.Height/2), new Rectangle(0, 0, GUITexture.Width, GUITexture.Height), Color.White, rotation, new Vector2(GUITexture.Width/2, GUITexture.Height/2), 1, sEffect, 1);
+            else
+                spriteBatch.Draw(GUITexture, GUIRect, Color.White);
+                
         }
 
         public void CenterElement(int width, int height)
@@ -64,6 +71,14 @@ namespace Asteroids
         public void MoveElement(int x, int y)
         {
             GUIRect = new Rectangle(GUIRect.X += x, GUIRect.Y += y, GUIRect.Width, GUIRect.Height);
+        }
+
+        public void RotateElement(float rotation)
+        {
+            if (this.rotation + rotation > MathHelper.ToRadians(360))
+                this.rotation = 0;
+            else
+            this.rotation = this.rotation + rotation;
         }
 
     }

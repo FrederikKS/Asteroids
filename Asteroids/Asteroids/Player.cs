@@ -96,11 +96,11 @@ namespace Asteroids
 
 
             // Creates animation for spaceship
-            CreateAnimation("Normal", 1, 0, 2, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
-            CreateAnimation("TurnLeft", 2, 0, 0, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
-            CreateAnimation("TurnLeftFull", 1, 0, 1, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
-            CreateAnimation("TurnRight", 2, 0, 3, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
-            CreateAnimation("TurnRightFull", 1, 0, 4, 96, 120, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("Normal", 1, 0, 2, 48, 60, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("TurnLeft", 2, 0, 0, 48, 60, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("TurnLeftFull", 1, 0, 1, 48, 60, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("TurnRight", 2, 0, 3, 48, 60, Vector2.Zero, 10, colorData, STexture.Width);
+            CreateAnimation("TurnRightFull", 1, 0, 4, 48, 60, Vector2.Zero, 10, colorData, STexture.Width);
             PlayAnimation("Normal");
 
             bulletContent = content;
@@ -227,6 +227,15 @@ namespace Asteroids
             if (other is Asteroid)
             {
                 GameManager.Instance.Lives--;
+
+                attackSpeedBonus = 0;
+                bulletSize = 1;
+                shieldBonus = 0;
+                bulletSpeedBonus = 0;
+                mines = 0;
+
+                SPosition = new Vector2(1200 / 2, 720 / 2);
+                
 
                 //Sound effect
                 SoundEffectInstance damageInstance = damageEffect.CreateInstance();

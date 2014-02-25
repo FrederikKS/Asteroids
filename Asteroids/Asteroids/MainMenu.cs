@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace Asteroids
 {
@@ -19,11 +20,18 @@ namespace Asteroids
         List<GUIElement> enterName = new List<GUIElement>();
         List<GUIElement> inGame = new List<GUIElement>();
 
+        private string[] scores;
+        private int[] sortedScores;
+        private string[] sortedNames;
+
         private Keys[] lastPressedKeys = new Keys[5];
 
-        private string myName = string.Empty;
+        private string myName = "Anonymous";
 
         private SpriteFont sf;
+
+        public bool quitGame = false;
+        public bool scoreAdded = false;
 
         //Properties
         public string MyName
@@ -54,6 +62,7 @@ namespace Asteroids
             inGame.Add(new GUIElement("GUI/CryPurple.png"));
             inGame.Add(new GUIElement("GUI/CryRed.png"));
             inGame.Add(new GUIElement("GUI/CryYellow.png"));
+
         }
 
         public void LoadContent(ContentManager content)
@@ -75,7 +84,7 @@ namespace Asteroids
                 name.clickEvent += OnClick;
             }
 
-            enterName.Find(x => x.AssetName == "GUI/NameOK.png").MoveElement(0, 50);
+            enterName.Find(x => x.AssetName == "GUI/NameOK.png").MoveElement(0, 100);
 
             foreach(GUIElement game in inGame)
             {
@@ -93,15 +102,20 @@ namespace Asteroids
                     {
                         ele.Update();
                     }
+                    main.Find(x => x.AssetName == "GUI/background.png").RotateElement((float)(0.5*Math.PI/180));
                     break;
                 case GameState.enterName:
                     foreach (GUIElement name in enterName)
                     {
                         name.Update();
                     }
+                    main.Find(x => x.AssetName == "GUI/background.png").Update();
+                    main.Find(x => x.AssetName == "GUI/background.png").RotateElement((float)(0.5 * Math.PI / 180));
                     GetKeys();
                     break;
                 case GameState.inGame:
+                    break;
+                case GameState.highScore:
                     break;
                 default:
                     break;
@@ -124,6 +138,7 @@ namespace Asteroids
                     break;
 
                 case GameState.enterName:
+                    main.Find(x => x.AssetName == "GUI/background.png").Draw(spriteBatch);
                     foreach (GUIElement name in enterName)
                     {
                         name.Draw(spriteBatch);
@@ -132,6 +147,36 @@ namespace Asteroids
                     break;
 
                 case GameState.inGame:
+                    break;
+                case GameState.highScore:
+                    if (!scoreAdded)
+                    {
+                        scores = new string[10];
+                        // Open the file to read from. 
+                        using (StreamReader sr = File.OpenText("Content/HighScore.txt"))
+                        {
+                            string s = "";
+
+                            for (int i = 0; i < scores.Length; i++)
+                            {
+                                if ((s = sr.ReadLine()) != null)
+                                    scores[i] = s;
+                            }
+                        }
+
+                        //AddScoreToFile(GameManager.Instance.Score);
+                        scoreAdded = true;
+                    }
+
+                    
+                    spriteBatch.DrawString(sf, "Highscores:", new Vector2(100, 100), Color.White);
+                    for (int i = 0; i < scores.Length; i++)
+                    {
+                        if(scores[i] != null)
+                        //spriteBatch.DrawString(sf, sortedNames[i] + " " + sortedScores[i], new Vector2(100, 130 + 30*i), Color.White);
+                        spriteBatch.DrawString(sf, myName + " " + GameManager.Instance.Score, new Vector2(100, 130 + 30 * i), Color.White);
+                    }
+                    
                     break;
                 default:
                     break;
@@ -154,7 +199,7 @@ namespace Asteroids
             }
             if (element == "GUI/MenuQuit.png")
             {
-                //Quit game
+                quitGame = true;
             }
         }
 
@@ -198,6 +243,104 @@ namespace Asteroids
                 if (key != Keys.LeftShift && key != Keys.LeftControl && key != Keys.LeftAlt && key != Keys.Back && key != Keys.Enter)
                 myName += key.ToString();
             }
+        }
+
+        public void AddScoreToFile(int score)
+        {
+            string path = @"Content/HighScore.txt";
+            
+            // This text is added only once to the file. 
+            if (!File.Exists(path))
+            {
+                // Create a file to write to. 
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    sw.WriteLine(myName + ": " + GameManager.Instance.Score);
+                }
+            }
+            else
+            {
+                using (StreamWriter sw = File.AppendText(path))
+                {
+                    sw.WriteLine(myName + ": " + GameManager.Instance.Score);
+                }
+            }
+
+            SortScore(scores, GameManager.Instance.Score);
+        }
+
+        private void SortScore(string[] scores, int newScore)
+        {
+            string temp = "";
+            char[] charListScore;
+            string[] nameList = new string[1];
+            int numOfScores = 0;
+            int[] tempScores = new int[10];
+
+            for (int i = 0; i < 10; i++)
+            {
+                if (scores[i] != null)
+                {
+                    {
+                        charListScore = new char[scores[i].Length];
+                        nameList = new string[scores[i].Length - charListScore.Length];
+                        numOfScores++;
+                        for (int x = 6; x >= 0; x--)
+                        {
+                            if (scores[i][scores[i].Length - 1 - i] == '0' || scores[i][scores[i].Length - 1 - i] == '1' || scores[i][scores[i].Length - 1 - i] == '2' || scores[i][scores[i].Length - 1 - i] == '3' || scores[i][scores[i].Length - 1 - i] == '4' || scores[i][scores[i].Length - 1 - i] == '5' || scores[i][scores[i].Length - 1 - i] == '6' || scores[i][scores[i].Length - 1 - i] == '7' || scores[i][scores[i].Length - 1 - i] == '8' || scores[i][scores[i].Length - 1 - i] == '9')
+                            {
+                                charListScore[i] = scores[i][scores[i].Length - 1 - i];
+                                temp = Convert.ToString((charListScore[i]) + temp);
+                            }
+                        }
+
+                        for (int y = 0; y < nameList.Length; y++)
+                        {
+                            nameList[i] = nameList[i] + scores[i][y];
+
+                        }
+
+                        tempScores[i] = Convert.ToInt32(temp);
+                    }
+                }
+                 
+            }
+
+            sortedScores = SortedScore(tempScores, numOfScores, nameList);
+
+            
+        }
+
+        private int[] SortedScore(int[] tempScores, int numOfScores, string[] names)
+        {
+            int[] sortedScore = new int[numOfScores];
+
+            for (int i = 0; i < numOfScores; i++)
+            {
+                int numberOfScoresOver = 0;
+                int numberOfScoresBelow = 0;
+                int scoreA = tempScores[i];
+                string nameA = Convert.ToString(names[i]);
+
+                for (int x = 0; x < numOfScores; x++)
+                {
+                    int scoreB = tempScores[x];
+                    if (scoreA >= scoreB)
+                    {
+                        numberOfScoresBelow++;
+                    }
+                    else
+                    {
+                        numberOfScoresOver++;
+                    }
+                }
+
+                sortedScore[numberOfScoresOver] = scoreA;
+                sortedNames[numberOfScoresOver] = nameA;
+
+            }
+
+            return sortedScore;
         }
     }
 }

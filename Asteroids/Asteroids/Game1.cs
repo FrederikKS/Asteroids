@@ -22,7 +22,6 @@ namespace Asteroids
         Texture2D background;
         Rectangle bgRec;
         Player player;
-        //Enemy enemy;
         Asteroid asteroid;
         private int worldSizeX;
         private int worldSizeY;
@@ -80,6 +79,9 @@ namespace Asteroids
 
             //Instantiating level int
             level = 1;
+
+            //Instantiating player score
+            GameManager.Instance.Score = 0000000;
 
             base.Initialize();
         }
@@ -187,13 +189,13 @@ namespace Asteroids
                         asteroid = engineer.GetAsteroid;
                         GameManager.Instance.TempList.Add(asteroid);
                     }
-                }
-
-                //if (main.gameState == GameState.inGame && GameManager.Instance.Lives == 0)
-                //{
-
-                //}                              
+                }                       
             }
+            if (main.gameState == GameState.inGame && GameManager.Instance.Lives <= 0)
+                main.gameState = GameState.highScore;
+
+            if (main.quitGame)
+                this.Exit();
 
             base.Update(gameTime);
         }
@@ -213,12 +215,14 @@ namespace Asteroids
             // Menu
             main.Draw(spriteBatch);
 
-            if (main.gameState == GameState.inGame)
-            {
-                foreach (GameObject obj in GameManager.Instance.AllObjects)
+
+            if (main.gameState == GameState.inGame || main.gameState == GameState.highScore)
                 {
-                    obj.Draw(spriteBatch);
-                }
+
+                    foreach (GameObject obj in GameManager.Instance.AllObjects)
+                    {
+                        obj.Draw(spriteBatch);
+                    }
 
                 //GUI
                 //Top Left
@@ -275,6 +279,11 @@ namespace Asteroids
             spriteBatch.End();
             // TODO: Add your drawing code here
             base.Draw(gameTime);
+        }
+
+        public void Quit()
+        {
+            this.Exit();
         }
     }
 }
