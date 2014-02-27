@@ -178,6 +178,7 @@ namespace Asteroids
                     obj.Update(gameTime);
                 }
 
+                //Check if no asteroids remain
                 if (currentAsteroids == 0)
                 {
                     level++;

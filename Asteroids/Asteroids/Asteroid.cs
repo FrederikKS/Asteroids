@@ -43,13 +43,6 @@ namespace Asteroids
 
         public override void LoadContent(ContentManager content)
         {
-            //STexture = content.Load<Texture2D>("a10000.png");
-            //Color[] colorData = new Color[STexture.Width * STexture.Height];
-            //STexture.GetData<Color>(colorData);
-
-            //CreateAnimation("Normal", 1, 0, 0, 120, 120, Vector2.Zero, 10, colorData, STexture.Width);
-            //PlayAnimation("Normal");
-
             // Loading sound effect
             destroyEffect = content.Load<SoundEffect>("explosion-2");
 
@@ -103,6 +96,9 @@ namespace Asteroids
         {
            
         }
+        /// <summary>
+        /// Splits the asteroid in two and spawns a powerup
+        /// </summary>
         public void Split()
         {
 

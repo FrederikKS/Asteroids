@@ -15,11 +15,17 @@ namespace Asteroids
         private Vector2 startPos;
         private int type;
 
+        //Properties
         public Asteroid GetAsteroid
         {
             get { return asteroid; }
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="startPosition"></param>
+        /// <param name="type"></param>
         public AsteroidLarge(Vector2 startPosition, int type)
         {
             asteroid = new Asteroid(startPosition, type);
@@ -47,6 +53,9 @@ namespace Asteroids
             this.asteroid.SPosition = startPos;
         }
 
+        /// <summary>
+        /// Defines which texture this asteroid should have
+        /// </summary>
         public void BuildTexture()
         {
             if (type == 0)
@@ -75,6 +84,13 @@ namespace Asteroids
             asteroid.LoadContent(GameManager.Instance.Content);
         }
 
+        /// <summary>
+        /// Randomizer
+        /// </summary>
+        /// <param name="rnd"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         public double NextDouble(Random rnd, double min, double max)
         {
             return min + (rnd.NextDouble() * (max - min));

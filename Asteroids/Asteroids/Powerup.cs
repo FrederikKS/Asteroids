@@ -31,6 +31,10 @@ namespace Asteroids
             this.type = type;
         }
 
+        /// <summary>
+        /// Loads content for powerup, depending on randomized type
+        /// </summary>
+        /// <param name="content"></param>
         public override void LoadContent(ContentManager content)
         {
             STexture = content.Load<Texture2D>("Crystals.png");

@@ -64,7 +64,10 @@ namespace Asteroids
             inGame.Add(new GUIElement("GUI/CryYellow.png"));
 
         }
-
+        /// <summary>
+        /// Loads all the GUIElement contents
+        /// </summary>
+        /// <param name="content"></param>
         public void LoadContent(ContentManager content)
         {
             sf = content.Load<SpriteFont>("SpriteFont1");
@@ -92,7 +95,9 @@ namespace Asteroids
             }
 
         }
-
+        /// <summary>
+        /// Update function
+        /// </summary>
         public void Update()
         {
             switch (gameState)
@@ -125,7 +130,10 @@ namespace Asteroids
 
 
         }
-
+        /// <summary>
+        /// Draw function like all the other draw functions :)
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public void Draw(SpriteBatch spriteBatch)
         {
             switch (gameState)
@@ -151,38 +159,49 @@ namespace Asteroids
                 case GameState.highScore:
                     if (!scoreAdded)
                     {
+                        string path = @"Content/HighScore.txt";
                         scores = new string[10];
                         // Open the file to read from. 
-                        using (StreamReader sr = File.OpenText("Content/HighScore.txt"))
+                        if (File.Exists(path))
                         {
-                            string s = "";
-
-                            for (int i = 0; i < scores.Length; i++)
+                            using (StreamReader sr = File.OpenText("Content/HighScore.txt"))
                             {
-                                if ((s = sr.ReadLine()) != null)
-                                    scores[i] = s;
+                                string s = "";
+
+                                for (int i = 0; i < scores.Length; i++)
+                                {
+                                    if ((s = sr.ReadLine()) != null)
+                                        scores[i] = s;
+                                }
                             }
                         }
+                        
 
-                        //AddScoreToFile(GameManager.Instance.Score);
+                        AddScoreToFile(GameManager.Instance.Score);
                         scoreAdded = true;
                     }
 
                     
-                    spriteBatch.DrawString(sf, "Highscores:", new Vector2(100, 100), Color.White);
+                    spriteBatch.DrawString(sf, "Current Highscores:", new Vector2(100, 100), Color.White);
                     for (int i = 0; i < scores.Length; i++)
                     {
-                        if(scores[i] != null)
-                        //spriteBatch.DrawString(sf, sortedNames[i] + " " + sortedScores[i], new Vector2(100, 130 + 30*i), Color.White);
-                        spriteBatch.DrawString(sf, myName + " " + GameManager.Instance.Score, new Vector2(100, 130 + 30 * i), Color.White);
+                        //if (scoreScores[i] != 0 && sortedNames[i] != null)
+                            //spriteBatch.DrawString(sf, sortedNames[i] + " " + sortedScores[i], new Vector2(100, 130 + 30 * i), Color.White);
+                        if (scores[i] != null)
+                        spriteBatch.DrawString(sf, scores[i] /*+ ": " + GameManager.Instance.Score*/, new Vector2(100, 130 + 30 * i), Color.White);
                     }
+
+                    spriteBatch.DrawString(sf, "Your Score" + ": " + GameManager.Instance.Score, new Vector2(100, 130 + 330), Color.White);
                     
                     break;
                 default:
                     break;
             }
         }
-
+        /// <summary>
+        /// Change enum state on click
+        /// </summary>
+        /// <param name="element"></param>
         public void OnClick(string element)
         {
             if (element == "GUI/MenuStart.png")
@@ -202,7 +221,9 @@ namespace Asteroids
                 quitGame = true;
             }
         }
-
+        /// <summary>
+        /// Read which key is pressed
+        /// </summary>
         public void GetKeys()
         {
             KeyboardState kbState = Keyboard.GetState();
@@ -245,6 +266,10 @@ namespace Asteroids
             }
         }
 
+        /// <summary>
+        /// Unfinished sorting method. Currently only adds plays score to a .txt file containing scores
+        /// </summary>
+        /// <param name="score"></param>
         public void AddScoreToFile(int score)
         {
             string path = @"Content/HighScore.txt";
@@ -266,14 +291,18 @@ namespace Asteroids
                 }
             }
 
-            SortScore(scores, GameManager.Instance.Score);
+            //SortScore(scores, GameManager.Instance.Score);
         }
-
+        /// <summary>
+        /// Unfinished attempt at sorting scores. Perhaps I should have looked on the internet for advice.
+        /// </summary>
+        /// <param name="scores"></param>
+        /// <param name="newScore"></param>
         private void SortScore(string[] scores, int newScore)
         {
             string temp = "";
-            char[] charListScore;
-            string[] nameList = new string[1];
+            char[] charListScore = new char[scores.Length];
+            string[] nameList = new string[10];
             int numOfScores = 0;
             int[] tempScores = new int[10];
 
@@ -282,17 +311,16 @@ namespace Asteroids
                 if (scores[i] != null)
                 {
                     {
-                        charListScore = new char[scores[i].Length];
-                        nameList = new string[scores[i].Length - charListScore.Length];
                         numOfScores++;
                         for (int x = 6; x >= 0; x--)
                         {
                             if (scores[i][scores[i].Length - 1 - i] == '0' || scores[i][scores[i].Length - 1 - i] == '1' || scores[i][scores[i].Length - 1 - i] == '2' || scores[i][scores[i].Length - 1 - i] == '3' || scores[i][scores[i].Length - 1 - i] == '4' || scores[i][scores[i].Length - 1 - i] == '5' || scores[i][scores[i].Length - 1 - i] == '6' || scores[i][scores[i].Length - 1 - i] == '7' || scores[i][scores[i].Length - 1 - i] == '8' || scores[i][scores[i].Length - 1 - i] == '9')
                             {
                                 charListScore[i] = scores[i][scores[i].Length - 1 - i];
-                                temp = Convert.ToString((charListScore[i]) + temp);
                             }
                         }
+
+                        temp = Convert.ToString((charListScore[i]) + temp);
 
                         for (int y = 0; y < nameList.Length; y++)
                         {
@@ -301,19 +329,26 @@ namespace Asteroids
                         }
 
                         tempScores[i] = Convert.ToInt32(temp);
+                        
                     }
                 }
                  
             }
 
-            sortedScores = SortedScore(tempScores, numOfScores, nameList);
+            SortedScore(tempScores, numOfScores, nameList);
 
             
         }
-
-        private int[] SortedScore(int[] tempScores, int numOfScores, string[] names)
+        /// <summary>
+        /// Last part of the failed sorting attempt. Will try to fix this at a later point.
+        /// </summary>
+        /// <param name="tempScores"></param>
+        /// <param name="numOfScores"></param>
+        /// <param name="names"></param>
+        private void SortedScore(int[] tempScores, int numOfScores, string[] names)
         {
             int[] sortedScore = new int[numOfScores];
+            string[] sortedName = new string[numOfScores];
 
             for (int i = 0; i < numOfScores; i++)
             {
@@ -336,11 +371,13 @@ namespace Asteroids
                 }
 
                 sortedScore[numberOfScoresOver] = scoreA;
-                sortedNames[numberOfScoresOver] = nameA;
+                sortedName[numberOfScoresOver] = nameA;
 
             }
 
-            return sortedScore;
+            sortedScores = sortedScore;
+            sortedNames = sortedName;
+
         }
     }
 }

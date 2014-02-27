@@ -11,18 +11,18 @@ namespace Asteroids
 {
     class GUIElement
     {
+        //Fields
         private Texture2D GUITexture;
-
         private Rectangle GUIRect;
-
         private string assetName;
         private float rotation = 0;
         private SpriteEffects sEffect = new SpriteEffects();
-
         public delegate void ElementClicked(string element);
-
         public event ElementClicked clickEvent;
 
+        /// <summary>
+        /// Properties
+        /// </summary>
         public Texture2D GetGUITexture
         {
             get { return GUITexture; }
@@ -33,17 +33,19 @@ namespace Asteroids
             get { return assetName; }
             set { assetName = value; }
         }
-
+        //Constructor
         public GUIElement(string assetName)
         {
             this.assetName = assetName;
         }
-
+        //Load content for this GUI element
         public void LoadContent(ContentManager content)
         {
             GUITexture = content.Load<Texture2D>(assetName);
             GUIRect = new Rectangle(0, 0, GUITexture.Width, GUITexture.Height);
         }
+
+        //Perform this every frame
         public void Update()
         {
             if (GUIRect.Contains(new Point(Mouse.GetState().X, Mouse.GetState().Y)) && Mouse.GetState().LeftButton == ButtonState.Pressed) 
@@ -53,6 +55,10 @@ namespace Asteroids
             }
         }
 
+        /// <summary>
+        /// Draw function, used for drawing GUI elements
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public void Draw(SpriteBatch spriteBatch)
         {
             //spriteBatch.Draw(sTexture, sPosition + sOffset, sRectangles[currentIndex], sColor, sRotation, sOrigin, scale, sEffect, sLayer);

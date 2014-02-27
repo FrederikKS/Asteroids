@@ -14,11 +14,12 @@ namespace Asteroids
         private Projectile bullet;
         private GameObject origin;
 
+        //Property
         public Projectile GetBullet
         {
             get { return bullet; }
         }
-
+        //Constructor
         public Bullet(GameObject origin)
         {
             bullet = new Projectile(origin);

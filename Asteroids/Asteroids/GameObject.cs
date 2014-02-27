@@ -138,8 +138,6 @@ namespace Asteroids
              // Calculate this object's transformation (rotation)
              SOrigin = new Vector2(sRectangles[currentIndex].Width / 2, sRectangles[currentIndex].Height / 2);
 
-             //objectTransform = Matrix.CreateTranslation(new Vector3(-sOrigin, 0.0f)) * Matrix.CreateRotationZ(sRotation) * Matrix.CreateTranslation(new Vector3(sPosition, 0.0f));
-
              HandleCollision();
          }
 
@@ -155,11 +153,6 @@ namespace Asteroids
              Rectangle bottomLine = new Rectangle(CollisionRect.X, CollisionRect.Y + CollisionRect.Height, CollisionRect.Width, 1);
              Rectangle rightLine = new Rectangle(CollisionRect.X + CollisionRect.Width, CollisionRect.Y, 1, CollisionRect.Height);
              Rectangle leftLine = new Rectangle(CollisionRect.X, CollisionRect.Y, 1, CollisionRect.Height);
-
-             spriteBatch.Draw(boxTexture, topLine, Color.Red);
-             spriteBatch.Draw(boxTexture, bottomLine, Color.Red);
-             spriteBatch.Draw(boxTexture, rightLine, Color.Red);
-             spriteBatch.Draw(boxTexture, leftLine, Color.Red);
          }
 
          /// <summary>
@@ -194,6 +187,9 @@ namespace Asteroids
                  sRectangles = animations[name].Rectangles;
              }
          }
+        /// <summary>
+        /// Handles collision. Checks if object collides with rectangle, then checks pixel collision
+        /// </summary>
          private void HandleCollision()
          {
              foreach (GameObject obj in GameManager.Instance.AllObjects)
@@ -219,24 +215,13 @@ namespace Asteroids
 
              }
          }
-
-#region not working pixel collision
-         /// <summary>
-         /// Determines if there is overlap of the non-transparent pixels between two
-         /// sprites.
-         /// </summary>
-         /// <param name="transformA">World transform of the first sprite.</param>
-         /// <param name="widthA">Width of the first sprite's texture.</param>
-         /// <param name="heightA">Height of the first sprite's texture.</param>
-         /// <param name="dataA">Pixel color data of the first sprite.</param>
-         /// <param name="transformB">World transform of the second sprite.</param>
-         /// <param name="widthB">Width of the second sprite's texture.</param>
-         /// <param name="heightB">Height of the second sprite's texture.</param>
-         /// <param name="dataB">Pixel color data of the second sprite.</param>
-         /// <returns>True if non-transparent pixels overlap; false otherwise</returns>
-         
-         //private bool IntersectPixels(Matrix transformA, int widthA, int heightA, Color[] dataA,
-         //                             Matrix transformB, int widthB, int heightB, Color[] dataB)
+        /// <summary>
+        /// Checks if there is pixel collision
+        /// Built by using tutorial from xbox.create.msdn.com/education/catalog/tutorial/collision_2d_perpixel_transformed
+        /// Changed intake to only GameObject to fit the structure of this project
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
          private bool IntersectPixels(GameObject other)
          {
              // Calculate a matrix which transforms from A's local space into
@@ -246,7 +231,6 @@ namespace Asteroids
              // When a point moves in A's local space, it moves in B's local space with a
              // fixed direction and distance proportional to the movement in A.
              // This algorithm steps through A one pixel at a time along A's X and Y axes
-             // Calculate the analogous steps in B:
              Vector2 stepX = Vector2.TransformNormal(Vector2.UnitX, transformAToB);
              Vector2 stepY = Vector2.TransformNormal(Vector2.UnitY, transformAToB);
 
@@ -267,7 +251,7 @@ namespace Asteroids
                      int xB = (int)Math.Round(posInB.X);
                      int yB = (int)Math.Round(posInB.Y);
 
-                     // If the pixel lies within the bounds of B
+                     // If the pixel is inside B
                      if (0 <= xB && xB < other.sRectangles[other.currentIndex].Width &&
                          0 <= yB && yB < other.sRectangles[other.currentIndex].Height)
                      {
@@ -279,7 +263,7 @@ namespace Asteroids
                         // If both pixels are not completely transparent,
                         if (colorA.A != 0 && colorB.A != 0)
                         {
-                            // then an intersection has been found
+                            // Collision!
                             return true;
                         }
                      }
@@ -292,10 +276,10 @@ namespace Asteroids
                  yPosInB += stepY;
              }
 
-             // No intersection found
+             //If nothing has been found
              return false;
          }
-#endregion
+
        
 
          /// <summary>
@@ -315,10 +299,12 @@ namespace Asteroids
          /// <summary>
          /// Calculates an axis aligned rectangle which fully contains an arbitrarily
          /// transformed axis aligned rectangle.
+         /// Again from the tutorial xbox.create.msdn.com/education/catalog/tutorial/collision_2d_perpixel_transformed
+         /// This is used to transform the bounding points of the gameobject's collisionbox
          /// </summary>
          /// <param name="rectangle">Original bounding rectangle.</param>
          /// <param name="transform">World transform of the rectangle.</param>
-         /// <returns>A new rectangle which contains the trasnformed rectangle.</returns>
+         /// <returns>A new rectangle which contains the transformed rectangle.</returns>
          public Rectangle CalculateBoundingRectangle(Rectangle rectangle,
                                                             Matrix transform)
          {

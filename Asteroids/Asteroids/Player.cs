@@ -29,7 +29,6 @@ namespace Asteroids
         private Stopwatch stopwatch;
         private int turningSpeed = 4;
         private bool attacking = false;
-        private Projectile bullet;
         private SoundEffect laserEffect;
         private SoundEffect damageEffect;
         private float volume = 1.0f;
@@ -164,7 +163,7 @@ namespace Asteroids
             {
                 sVelocity = new Vector2((float)Math.Cos(SRotation - 1.57079f), (float)Math.Sin(SRotation - 1.57079f));
                 state = State.Throttle;
-                PlayAnimation("ExhaustNormal");
+                //PlayAnimation("ExhaustNormal");
             }
 
             if (keyState.IsKeyDown(Keys.A))
@@ -173,7 +172,7 @@ namespace Asteroids
                     PlayAnimation("TurnLeft");
 
                 if (!currentAnimation.Contains("ExhaustTurnLeftFull") && state == State.Throttle)
-                    PlayAnimation("ExhaustTurnLeft");
+                    //PlayAnimation("ExhaustTurnLeft");
 
                 state = State.Turning;
                 SRotation = SRotation - (float)(turningSpeed * Math.PI / 180);
@@ -184,7 +183,7 @@ namespace Asteroids
                     PlayAnimation("TurnRight");
 
                 if (!currentAnimation.Contains("ExhaustTurnRightFull") && state == State.Throttle)
-                    PlayAnimation("ExhaustTurnRight");
+                  //  PlayAnimation("ExhaustTurnRight");
 
                 state = State.Turning;
                 SRotation = SRotation + (float)(turningSpeed * Math.PI / 180);
@@ -216,14 +215,16 @@ namespace Asteroids
                 bulletSpeed = 300 + bulletSpeedBonus * 100;
                 bulletEngineer = new BulletEngineer(new Bullet(this));
                 bulletEngineer.BuildBullet();
-                bullet = bulletEngineer.GetBullet;
-                GameManager.Instance.TempList.Add(bullet);
+                GameManager.Instance.TempList.Add(bulletEngineer.GetBullet);
                 attacking = false;
             }
 
             state = State.Idle;
         }
-
+        /// <summary>
+        /// Overwrite animations when they've been done once
+        /// </summary>
+        /// <param name="name"></param>
         public override void OnAnimationDone(string name)
         {
             if(name.Contains("TurnLeft"))
@@ -235,11 +236,12 @@ namespace Asteroids
             if (name.Contains("ExhaustTurnRight"))
                 PlayAnimation("ExhaustTurnRightFull");
         }
-
+        /// <summary>
+        /// What happens when the player collides with stuff
+        /// </summary>
+        /// <param name="other"></param>
         public override void OnCollisionEnter(GameObject other)
         {
-            this.sColor = Color.Red;
-
             if (other is Powerup)
             {
                 AddBonus(((Powerup)other).Type);
@@ -271,6 +273,10 @@ namespace Asteroids
             this.sColor = Color.White;
         }
 
+        /// <summary>
+        /// Powerup given to player on collision with specific type powerup
+        /// </summary>
+        /// <param name="type"></param>
         public void AddBonus(int type)
         {
             if (type == 0 && shieldBonus < 1)
